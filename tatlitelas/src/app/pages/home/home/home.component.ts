@@ -6,7 +6,18 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  styles: [`
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    /* Diğer stil tanımlamaları buraya... */
+  `]
 })
 export class HomeComponent {
   title: string = 'Buse & Aydoğan';
@@ -24,15 +35,12 @@ export class HomeComponent {
     const fileList: FileList | null = element.files;
     if (fileList) {
       console.log("Dosya(lar) seçildi:", fileList);
-      this.uploadFile(fileList);
+      // Burada dosya yükleme işlemlerini gerçekleştirebilirsiniz
     }
-  }
-
-  uploadFile(files: FileList) {
-    console.log('Dosya yükleme işlevi çağrıldı', files);
   }
 
   openGallery() {
     console.log('Galeri açma işlevi çağrıldı');
+    // Burada galeri açma mantığını uygulayabilirsiniz
   }
 }

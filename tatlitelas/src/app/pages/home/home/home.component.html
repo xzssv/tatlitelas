@@ -2,16 +2,13 @@
   <h1>{{ title }}</h1>
   <div class="date">{{ date }}</div>
   <div class="btn-container">
-    <input type="file" id="fileInput" style="display: none;" multiple accept="image/*,video/*"
-      (change)="onFileSelected($event)">
     <button class="btnc btn-upload" (click)="triggerFileInput()">
-      <i class="fa fa-plus-square fa-2x" aria-hidden="true"></i>
+      <i class="fa fa-plus-square" aria-hidden="true"></i>
     </button>
     <button class="btn btn-gallery" (click)="openGallery()">
-      <i class="fas fa-images fa-2x"></i>
+      <i class="fas fa-images"></i>
     </button>
   </div>
-  <div id="progressContainer">
-    <div id="progressBar">0%</div>
-  </div>
+  <input type="file" id="fileInput" style="display: none;" multiple accept="image/*,video/*"
+    (change)="onFileSelected($event)">
 </div>
