@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface Photo {
@@ -15,7 +15,7 @@ interface Photo {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   title: string = 'Buse & Aydoğan';
   date: string = '28.09.24';
 
@@ -33,13 +33,17 @@ export class HomeComponent {
   }
 
   savePhotos() {
-    localStorage.setItem('photos', JSON.stringify(this.photos));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('photos', JSON.stringify(this.photos));
+    }
   }
 
   loadPhotos() {
-    const savedPhotos = localStorage.getItem('photos');
-    if (savedPhotos) {
-      this.photos = JSON.parse(savedPhotos);
+    if (typeof window !== 'undefined') {
+      const savedPhotos = localStorage.getItem('photos');
+      if (savedPhotos) {
+        this.photos = JSON.parse(savedPhotos);
+      }
     }
   }
 
@@ -73,5 +77,4 @@ export class HomeComponent {
     console.log('Galeri açılıyor:', this.photos);
     // Burada galeri açma mantığını uygulayabilirsiniz
   }
-
 }

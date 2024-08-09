@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Roboto:wght@300;400&display=swap');
 
-/* body {
-    background-color: #eddcd2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Roboto', sans-serif;
-} */
-
 h1 {
     font-family: 'Dancing Script', cursive;
     color: #6B705C;
@@ -23,34 +15,23 @@ h1 {
 
 .btn,
 .btnc {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
+    @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center w-36;
 }
 
 .btnc {
-    background-color: #7dad7d;
-    color: white;
+    @apply bg-custom-green text-white;
 }
 
 .btn {
-    background-color: #CB997E;
-    color: white;
+    @apply bg-custom-brown text-white;
 }
 
 .btn:hover,
 .btnc:hover {
-    opacity: 0.8;
+    @apply opacity-80;
 }
 
 .btn i,
 .btnc i {
-    font-size: 1.5em;
+    @apply text-2xl;
 }
