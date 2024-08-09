@@ -1,23 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Roboto:wght@300;400&display=swap');
 
-body {
+/* body {
     background-color: #eddcd2;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
     font-family: 'Roboto', sans-serif;
-}
-
-.container {
-    text-align: center;
-    padding: 20px;
-}
+} */
 
 h1 {
     font-family: 'Dancing Script', cursive;
-    font-size: 3.5em;
     color: #6B705C;
     margin-bottom: 10px;
 }
@@ -27,13 +19,6 @@ h1 {
     font-size: 2em;
     color: #A5A58D;
     margin-bottom: 30px;
-}
-
-.btn-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
 }
 
 .btn,

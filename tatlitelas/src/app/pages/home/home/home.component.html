@@ -1,8 +1,8 @@
-<div class="container">
-  <h1>{{ title }}</h1>
-  <div class="date">{{ date }}</div>
-  <div class="btn-container">
-    <button class="btnc btn-upload" (click)="triggerFileInput()">
+<div class="flex flex-col items-center justify-center min-h-screen h-full">
+  <h1 class="text-center text-5xl ">{{ title }}</h1>
+  <div class="date text-center">{{ date }}</div>
+  <div class="w-full flex items-center justify-center gap-2">
+    <button class="btnc btn-upload animate-bounce" (click)="triggerFileInput()">
       <i class="fa fa-plus-square" aria-hidden="true"></i>
     </button>
     <button class="btn btn-gallery" (click)="openGallery()">
@@ -11,4 +11,12 @@
   </div>
   <input type="file" id="fileInput" style="display: none;" multiple accept="image/*,video/*"
     (change)="onFileSelected($event)">
+  <div *ngIf="photos.length > 0" class="mt-8 w-full max-w-2xl">
+    <h2 class="text-2xl mb-4">Yüklenen Fotoğraflar</h2>
+    <div class="grid grid-cols-3 gap-4">
+      <div *ngFor="let photo of photos" class="aspect-square overflow-hidden rounded-lg">
+        <img [src]="photo.url" [alt]="photo.name" class="w-full h-full object-cover">
+      </div>
+    </div>
+  </div>
 </div>
