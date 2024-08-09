@@ -1,37 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Roboto:wght@300;400&display=swap');
 
+:root {
+  --color-primary: #6B705C;
+  --color-secondary: #A5A58D;
+  --color-custom-green: #7dad7d;
+  --color-custom-brown: #CB997E;
+}
+
 h1 {
-    font-family: 'Dancing Script', cursive;
-    color: #6B705C;
-    margin-bottom: 10px;
+  font-family: 'Dancing Script', cursive;
+  color: var(--color-primary);
+  margin-bottom: 10px;
 }
 
 .date {
-    font-family: 'Great Vibes', cursive;
-    font-size: 2em;
-    color: #A5A58D;
-    margin-bottom: 30px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2em;
+  color: var(--color-secondary);
+  margin-bottom: 30px;
 }
 
 .btn,
 .btnc {
-    @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center w-36;
+  @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center w-36;
 }
 
 .btnc {
-    @apply bg-custom-green text-white;
+  background-color: var(--color-custom-green);
+  color: white;
 }
 
 .btn {
-    @apply bg-custom-brown text-white;
+  background-color: var(--color-custom-brown);
+  color: white;
 }
 
 .btn:hover,
 .btnc:hover {
-    @apply opacity-80;
+  @apply opacity-80;
 }
 
 .btn i,
 .btnc i {
-    @apply text-2xl;
+  @apply text-2xl;
 }
