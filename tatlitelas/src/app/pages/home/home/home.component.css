@@ -6,9 +6,9 @@
     padding-top: 100%; /* 1:1 Aspect Ratio */
     overflow: hidden;
     border-radius: 50%; /* Oval şekil */
-  }
+}
   
-  .photo-container img {
+.photo-container img {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -18,67 +18,73 @@
     object-position: center; /* Fotoğrafı ortala */
     border-radius: 50%; /* Oval şekil */
     transform: translate(-50%, -50%); /* Fotoğrafı ortalamak için */
-  }
+}
   
-  /* Opsiyonel: Fotoğraflar üzerinde hover efekti */
-  .photo-container:hover img {
+/* Opsiyonel: Fotoğraflar üzerinde hover efekti */
+.photo-container:hover img {
     transform: translate(-50%, -50%) scale(1.05);
     transition: transform 0.3s ease-in-out;
-  }
+}
   
-  /* Opsiyonel: Masonry benzeri görünüm için */
-  @media (min-width: 640px) {
+/* Opsiyonel: Masonry benzeri görünüm için */
+@media (min-width: 640px) {
     .grid {
-      column-count: 3;
-      column-gap: 1.5rem;
+        column-count: 3;
+        column-gap: 1.5rem;
     }
     .photo-container {
-      break-inside: avoid;
-      margin-bottom: 1.5rem;
+        break-inside: avoid;
+        margin-bottom: 1.5rem;
     }
-  }
+}
 
 :root {
-  --color-primary: #6B705C;
-  --color-secondary: #A5A58D;
-  --color-custom-green: #7dad7d;
-  --color-custom-brown: #CB997E;
+    --color-primary: #6B705C;
+    --color-secondary: #A5A58D;
+    --color-custom-green: #7dad7d;
+    --color-custom-brown: #CB997E;
 }
 
 h1 {
-  font-family: 'Dancing Script', cursive;
-  color: var(--color-primary);
-  margin-bottom: 10px;
+    font-family: 'Dancing Script', cursive;
+    color: var(--color-primary);
+    margin-bottom: 10px;
 }
 
 .date {
-  font-family: 'Great Vibes', cursive;
-  font-size: 2em;
-  color: var(--color-secondary);
-  margin-bottom: 30px;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2em;
+    color: var(--color-secondary);
+    margin-bottom: 30px;
 }
 
 .btn,
 .btnc {
-  @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center w-36;
+    @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center;
 }
 
 .btnc {
-  /* background-color: var(--color-custom-green); */
-  /* color: white; */
+    @apply animate-bounce w-36 bg-green-500 text-white; /* Yükle butonu */
 }
 
 .btn {
-  /* background-color: var(--color-custom-brown);
-  color: white; */
+    @apply w-36 h-12 bg-amber-300 text-white relative flex items-center justify-center; /* Galeri butonu */
+    overflow: hidden; /* İçeriğin taşmasını engelle */
 }
 
-.btn:hover,
-.btnc:hover {
-  @apply opacity-80;
+.btn span {
+    @apply whitespace-nowrap opacity-0 text-center font-bold;
+    transition: opacity 0.3s ease-in-out; /* Sadece opacity değişimi */
 }
 
-.btn i,
-.btnc i {
-  @apply text-2xl;
+.btn:hover span {
+    @apply opacity-100;
+}
+
+.btn i {
+    @apply text-2xl transition-opacity duration-300 ease-in-out;
+}
+
+.btn:hover i {
+    @apply opacity-0; /* İkonu gizler */
 }

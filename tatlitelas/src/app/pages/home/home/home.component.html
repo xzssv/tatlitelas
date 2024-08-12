@@ -5,18 +5,10 @@
     <button class="btnc btn-upload animate-bounce bg-green-500 text-white" (click)="triggerFileInput()">
       <i class="fa fa-plus-square mr-2" aria-hidden="true"></i>Yükle
     </button>
-    <button class="btn btn-gallery bg-amber-300 text-white" (click)="openGallery()">
-      <i class="fas fa-images mr-2"></i>Galeri
+    <button class="btn btn-gallery bg-amber-300 text-white relative overflow-hidden" (click)="openGallery()">
+      <i class="fas fa-images text-2xl"></i>
+      <span class="absolute left-12 opacity-0 transition-opacity duration-300">Galeri</span>
     </button>
   </div>
   <input type="file" id="fileInput" class="hidden" multiple accept="image/*,video/*" (change)="onFileSelected($event)">
-  <!-- <div *ngIf="photos.length > 0" class="mt-8 w-full max-w-2xl">
-    <h2 class="text-2xl mb-6 text-primary text-center">Yüklenen Fotoğraflar</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-      <div *ngFor="let photo of photos" class="photo-container">
-        <img [src]="photo.url" [alt]="photo.name"
-          class="w-full h-full object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
-      </div>
-    </div>
-  </div> -->
 </div>
