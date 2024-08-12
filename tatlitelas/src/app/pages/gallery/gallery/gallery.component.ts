@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 interface Photo {
@@ -11,7 +12,9 @@ interface Photo {
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.css']
+  styleUrls: ['./gallery.component.css'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class GalleryComponent implements OnInit {
   photos: Photo[] = [];
@@ -23,12 +26,7 @@ export class GalleryComponent implements OnInit {
   }
 
   loadPhotos() {
-    if (typeof window !== 'undefined') {
-      const savedPhotos = localStorage.getItem('photos');
-      if (savedPhotos) {
-        this.photos = JSON.parse(savedPhotos);
-      }
-    }
+    // Fotoğrafları yükleme mantığınızı burada uygulayın
   }
 
   goBack() {

@@ -7,30 +7,6 @@
   --color-custom-brown: #CB997E;
 }
 
-.font-dancing {
-  font-family: 'Dancing Script', cursive;
-}
-
 .text-primary {
   color: var(--color-primary);
-}
-
-.photo-container {
-  @apply relative w-full pt-[100%] overflow-hidden rounded-full;
-}
-
-.photo-container img {
-  @apply absolute top-1/2 left-1/2 w-full h-full object-cover rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-in-out;
-}
-
-.photo-container:hover img {
-  @apply scale-105;
-}
-
-.btn {
-  @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center w-36 bg-custom-brown text-white;
-}
-
-.btn:hover {
-  @apply opacity-80;
 }

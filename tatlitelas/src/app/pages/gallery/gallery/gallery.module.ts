@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { GalleryComponent } from './gallery.component';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-    {
-        path: 'gallery',
-        component: GalleryComponent
-    }
+    { path: '', component: GalleryComponent }
 ];
 
 @NgModule({
     imports: [
-        RouterModule.forChild(routes)
+        CommonModule,
+        RouterModule.forChild(routes),
+        GalleryComponent  // Standalone bileşeni import ediyoruz, deklare etmiyoruz
     ]
 })
 export class GalleryModule { }
