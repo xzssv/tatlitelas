@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+interface Photo {
+  id: string;
+  name: string;
+  url: string;
+  date: Date;
+}
 
 @Component({
   selector: 'app-gallery',
@@ -6,10 +14,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
+  photos: Photo[] = [];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    this.loadPhotos();
   }
 
+  loadPhotos() {
+    if (typeof window !== 'undefined') {
+      const savedPhotos = localStorage.getItem('photos');
+      if (savedPhotos) {
+        this.photos = JSON.parse(savedPhotos);
+      }
+    }
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
+  }
 }

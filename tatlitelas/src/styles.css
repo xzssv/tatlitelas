@@ -1,10 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: #6B705C;
+  --color-secondary: #A5A58D;
+  --color-custom-green: #7dad7d;
+  --color-custom-brown: #CB997E;
+}
+
 body {
-    background: linear-gradient(to bottom, #FFF8E7 0%, #FBE7E9 50%, #F8D5DA 100%);
-    background-attachment: fixed;
-    min-height: 100vh;
+  @apply font-sans;
+  background: linear-gradient(to bottom, #FFF8E7 0%, #FBE7E9 50%, #F8D5DA 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
   }
+  
+  .font-great-vibes {
+    font-family: 'Great Vibes', cursive;
+  }
+}

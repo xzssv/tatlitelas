@@ -1,3 +1,13 @@
-<p>
-  gallery works!
-</p>
+<div class="flex flex-col items-center justify-center min-h-screen h-full p-8 max-w-4xl mx-auto">
+  <h1 class="text-center text-5xl font-dancing text-primary mb-2">Fotoğraf Galerisi</h1>
+
+  <div class="w-full max-w-2xl mt-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div *ngFor="let photo of photos" class="photo-container">
+        <img [src]="photo.url" [alt]="photo.name" class="w-full h-full object-cover">
+      </div>
+    </div>
+  </div>
+
+  <button class="btn mt-8" (click)="goBack()">Ana Sayfaya Dön</button>
+</div>
