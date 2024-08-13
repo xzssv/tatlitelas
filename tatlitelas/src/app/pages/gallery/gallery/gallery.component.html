@@ -1,6 +1,14 @@
 <div class="gallery-container">
-  <div class="gallery">
-    <div *ngFor="let photo of photos" class="gallery-item">
+  <h2>Geniş Fotoğraflar</h2>
+  <div class="gallery wide-gallery">
+    <div *ngFor="let photo of widePhotos" class="gallery-item">
+      <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
+    </div>
+  </div>
+
+  <h2>Uzun Fotoğraflar</h2>
+  <div class="gallery tall-gallery">
+    <div *ngFor="let photo of tallPhotos" class="gallery-item">
       <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
     </div>
   </div>

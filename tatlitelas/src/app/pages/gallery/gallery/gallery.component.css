@@ -19,31 +19,49 @@
 }
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
-  justify-content: center;
+    display: grid;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
 }
 
 .gallery-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  aspect-ratio: 1 / 1;
-}
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    aspect-ratio: 1 / 1;
+    background-color: transparent;
+  }
 
 .gallery-item:hover {
   transform: scale(1.05);
 }
 
 .gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
-}
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    cursor: pointer;
+    background-color: transparent;
+  }
+
+  .wide-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  .tall-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  h2 {
+    font-family: 'Dancing Script', cursive;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
 /* Geri Dön butonu stilleri */
 .fixed-gallery-btn,
@@ -172,19 +190,19 @@
 
 /* Responsive tasarım */
 @media (max-width: 1200px) {
-  .gallery {
-    grid-template-columns: repeat(4, 1fr);
+    .gallery {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
-}
-
-@media (max-width: 768px) {
-  .gallery {
-    grid-template-columns: repeat(3, 1fr);
+  
+  @media (max-width: 768px) {
+    .gallery {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
-}
-
-@media (max-width: 480px) {
-  .gallery {
-    grid-template-columns: repeat(2, 1fr);
+  
+  @media (max-width: 480px) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-}
