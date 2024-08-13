@@ -1,21 +1,7 @@
 <div class="gallery-container">
-  <h2>Yatay Fotoğraflar</h2>
-  <div class="gallery wide-gallery">
-    <div *ngFor="let photo of widePhotos.slice(0, 5)" class="gallery-item">
+  <div class="gallery">
+    <div *ngFor="let photo of photos" class="gallery-item">
       <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
-    </div>
-    <div class="view-all" (click)="viewAllWide()">
-      <span>Tümünü Gör</span>
-    </div>
-  </div>
-
-  <h2>Dikey Fotoğraflar</h2>
-  <div class="gallery tall-gallery">
-    <div *ngFor="let photo of tallPhotos.slice(0, 5)" class="gallery-item">
-      <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
-    </div>
-    <div class="view-all" (click)="viewAllTall()">
-      <span>Tümünü Gör</span>
     </div>
   </div>
 </div>
