@@ -64,7 +64,7 @@ h1 {
 }
 
 .btnc {
-    @apply animate-bounce w-36 bg-green-500 text-white; /* Yükle butonu */
+  @apply animate-bounce w-36 bg-green-500 text-white; /* Yükle butonu */
 }
 
 .btn {
@@ -77,8 +77,10 @@ h1 {
     transition: opacity 0.3s ease-in-out; /* Sadece opacity değişimi */
 }
 
-.btn:hover span {
-    @apply opacity-100;
+.btnc:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn i {
@@ -87,4 +89,73 @@ h1 {
 
 .btn:hover i {
     @apply opacity-0; /* İkonu gizler */
+}
+
+.btnc svg {
+  width: 24px;
+  height: 24px;
+}
+
+.btnc span {
+  margin-left: 10px;
+}
+
+.fixed-gallery-btn,
+.fixed-back-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: var(--color-custom-brown);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  padding: 0;
+}
+
+.fixed-gallery-btn:hover,
+.fixed-back-btn:hover {
+  width: 150px; /* Genişliği 150px'e düşürdük */
+}
+
+.fixed-gallery-btn svg,
+.fixed-back-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  flex-shrink: 0;
+  margin: 0 18px;
+}
+
+.gallery-text,
+.back-text {
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  position: absolute;
+  left: 60px;
+  right: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.fixed-gallery-btn:hover .gallery-text,
+.fixed-back-btn:hover .back-text {
+  opacity: 1;
+}
+
+/* Geri dön butonu için farklı renk */
+.fixed-back-btn {
+  background-color: var(--color-custom-green);
 }

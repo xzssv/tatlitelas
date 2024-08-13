@@ -1,18 +1,20 @@
 <div class="flex flex-col items-center justify-center min-h-screen h-full p-8 max-w-4xl mx-auto">
-  <h1 class="text-center text-5xl font-dancing text-primary mb-2">Fotoğraf Galerisi</h1>
+  <h1 id="fotoğraf-galerisi" class="text-center text-5xl font-dancing text-primary mb-2">Fotoğraf Galerisi</h1>
 
   <div class="w-full max-w-2xl mt-8">
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      <div *ngFor="let photo of photos" class="photo-container">
-        <img [src]="photo.url" [alt]="photo.name" class="w-full h-full object-cover">
+      <div class="photo-container" *ngFor="let photo of photos">
+        <!-- Photo content -->
       </div>
     </div>
   </div>
-
-  <button class="fixed-back-button" (click)="goBack()">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-      class="size-6">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-    </svg>
-  </button>
 </div>
+
+<!-- Geri Dön butonu -->
+<button class="fixed-back-btn" (click)="goBack()">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+    class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+  </svg>
+  <span class="back-text">Geri Dön</span>
+</button>

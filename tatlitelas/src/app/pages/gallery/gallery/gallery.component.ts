@@ -26,7 +26,11 @@ export class GalleryComponent implements OnInit {
   }
 
   loadPhotos() {
-    // Fotoğrafları yükleme mantığınızı burada uygulayın
+    // Fotoğrafları yükleme mantığı
+    const savedPhotos = localStorage.getItem('photos');
+    if (savedPhotos) {
+      this.photos = JSON.parse(savedPhotos);
+    }
   }
 
   goBack() {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Photo {
   id: string;
@@ -20,6 +21,8 @@ export class HomeComponent implements OnInit {
   date: string = '28.09.24';
 
   photos: Photo[] = [];
+
+  constructor(private router: Router) { }
 
   triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -74,7 +77,6 @@ export class HomeComponent implements OnInit {
   }
 
   openGallery() {
-    console.log('Galeri açılıyor:', this.photos);
-    // Burada galeri açma mantığını uygulayabilirsiniz
+    this.router.navigate(['/gallery']);
   }
 }
