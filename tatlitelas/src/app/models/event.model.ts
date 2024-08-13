@@ -3,4 +3,8 @@ export interface Event {
     name: string;
     date: Date;
     ownerId: string;
+    brideName: string;
+    groomName: string;
+    eventDate: string;
+    eventId: string;
 }

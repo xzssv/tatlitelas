@@ -14,9 +14,12 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
         if (this.authService.isLoggedIn()) {
+            if (state.url === '/admin' && !this.authService.isEventOwner()) {
+                return this.router.createUrlTree(['/home']);
+            }
             return true;
-        } else {
-            return this.router.createUrlTree(['/login']);
         }
+
+        return this.router.createUrlTree(['/login']);
     }
 }
