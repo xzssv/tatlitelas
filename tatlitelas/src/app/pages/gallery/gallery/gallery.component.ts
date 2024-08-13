@@ -63,4 +63,16 @@ export class GalleryComponent implements OnInit {
   closeLightbox() {
     this.selectedPhoto = null;
   }
+
+  viewAllWide() {
+    // Tüm yatay fotoğrafları gösterme işlemi
+    console.log("Tüm yatay fotoğraflar gösteriliyor");
+    // Burada tüm fotoğrafları gösteren bir modal veya yeni bir sayfa açabilirsiniz
+  }
+
+  viewAllTall() {
+    // Tüm dikey fotoğrafları gösterme işlemi
+    console.log("Tüm dikey fotoğraflar gösteriliyor");
+    // Burada tüm fotoğrafları gösteren bir modal veya yeni bir sayfa açabilirsiniz
+  }
 }
