@@ -18,6 +18,7 @@ interface Photo {
 })
 export class GalleryComponent implements OnInit {
   photos: Photo[] = [];
+  selectedPhoto: Photo | null = null;
 
   constructor(private router: Router) { }
 
@@ -26,7 +27,6 @@ export class GalleryComponent implements OnInit {
   }
 
   loadPhotos() {
-    // Fotoğrafları yükleme mantığı
     const savedPhotos = localStorage.getItem('photos');
     if (savedPhotos) {
       this.photos = JSON.parse(savedPhotos);
@@ -35,5 +35,13 @@ export class GalleryComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/']);
+  }
+
+  openLightbox(photo: Photo) {
+    this.selectedPhoto = photo;
+  }
+
+  closeLightbox() {
+    this.selectedPhoto = null;
   }
 }
