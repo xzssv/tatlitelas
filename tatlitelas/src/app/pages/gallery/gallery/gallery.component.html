@@ -1,6 +1,6 @@
 <div class="gallery-container">
   <div class="gallery">
-    <div *ngFor="let photo of photos" class="gallery-item">
+    <div *ngFor="let photo of photos$ | async" class="gallery-item">
       <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
     </div>
   </div>
@@ -8,14 +8,14 @@
 
 <button class="fixed-back-btn" (click)="goBack()">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"></path>
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
   </svg>
   <span class="back-text">Geri Dön</span>
 </button>
 
-<div class="lightbox" *ngIf="selectedPhoto" (click)="closeLightbox()">
+<div *ngIf="selectedPhoto" class="lightbox" (click)="closeLightbox()">
   <div class="lightbox-content" (click)="$event.stopPropagation()">
     <img [src]="selectedPhoto.url" [alt]="selectedPhoto.name">
-    <a [href]="selectedPhoto.url" download class="download-btn">İndir</a>
+    <a class="download-btn" [href]="selectedPhoto.url" download>İndir</a>
   </div>
 </div>
