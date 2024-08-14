@@ -1,22 +1,27 @@
 import { Component } from '@angular/core';
-import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { FirestoreService } from './services/firestore.service';
 
 @Component({
     selector: 'app-example',
     template: `
-    <ul>
-      <li *ngFor="let item of items$ | async">
-        {{ item.name }}
-      </li>
-    </ul>
+    <div *ngFor="let item of items">
+      {{ item.name }}
+    </div>
   `
 })
 export class ExampleComponent {
-    items$: Observable<any[]>;
+    items: any[] = [];
 
-    constructor(firestore: Firestore) {
-        const itemsCollection = collection(firestore, 'items');
-        this.items$ = collectionData(itemsCollection);
+    constructor(private firestoreService: FirestoreService) {
+        this.loadItems();
+    }
+
+    async loadItems() {
+        this.items = await this.firestoreService.getCollection('items');
+    }
+
+    async addItem(item: any) {
+        await this.firestoreService.addDocument('items', item);
+        this.loadItems(); // Listeyi yenile
     }
 }

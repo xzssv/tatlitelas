@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,74 +9,43 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="container mx-auto mt-8 p-4">
-      <div class="max-w-4xl mx-auto bg-transparent rounded-lg shadow-md overflow-hidden">
-        <div class="flex flex-col md:flex-row">
-          <!-- Etkinlik Sahibi Girişi -->
-          <div class="w-full md:w-1/2 p-8 border-b md:border-b-0 md:border-r border-gray-200">
-            <h2 class="text-2xl font-bold mb-6 text-center text-primary">Etkinlik Sahibi Girişi</h2>
-            <form (ngSubmit)="onOwnerSubmit()" #ownerForm="ngForm">
-              <div class="mb-4">
-                <label for="email" class="block mb-2 text-secondary">Email</label>
-                <input type="email" id="email" name="email" [(ngModel)]="email" required class="w-full px-3 py-2 border rounded text-primary bg-transparent">
-              </div>
-              <div class="mb-4">
-                <label for="password" class="block mb-2 text-secondary">Şifre</label>
-                <input type="password" id="password" name="password" [(ngModel)]="password" required class="w-full px-3 py-2 border rounded text-primary bg-transparent">
-              </div>
-              <button type="submit" class="w-full bg-custom-green text-white px-4 py-2 rounded hover:bg-custom-brown transition duration-300">
-                Giriş Yap
-              </button>
-            </form>
-          </div>
-
-          <!-- Katılımcı Girişi -->
-          <div class="w-full md:w-1/2 p-8">
-            <h2 class="text-2xl font-bold mb-6 text-center text-primary">Katılımcı Girişi</h2>
-            <form (ngSubmit)="onParticipantSubmit()" #participantForm="ngForm">
-              <div class="mb-4">
-                <label for="eventId" class="block mb-2 text-secondary">Etkinlik ID</label>
-                <input type="text" id="eventId" name="eventId" [(ngModel)]="eventId" required class="w-full px-3 py-2 border rounded text-primary bg-transparent">
-              </div>
-              <button type="submit" class="w-full bg-custom-green text-white px-4 py-2 rounded hover:bg-custom-brown transition duration-300">
-                Etkinliğe Katıl
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Template kodunuz burada kalacak -->
   `,
   styles: [`
-    :host {
-      background: linear-gradient(to bottom, #FFF8E7 0%, #FBE7E9 50%, #F8D5DA 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* Stil kodlarınız burada kalacak */
   `]
 })
 export class LoginComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  isLogin = true;
   email = '';
   password = '';
-  eventId = '';
+  name = '';
+  isEventOwner = false;
 
-  constructor(private router: Router, private authService: AuthService) { }
-
-  onOwnerSubmit() {
-    if (this.authService.login(this.email, this.password)) {
-      this.router.navigate(['/admin']);
-    } else {
-      alert('Geçersiz kimlik bilgileri');
-    }
+  toggleMode() {
+    this.isLogin = !this.isLogin;
   }
 
-  onParticipantSubmit() {
-    if (this.authService.participantLogin(this.eventId)) {
-      this.router.navigate(['/home']);
+  async onSubmit() {
+    if (this.isLogin) {
+      try {
+        await this.authService.login(this.email, this.password);
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Login error:', error);
+        // Hata mesajını kullanıcıya göster
+      }
     } else {
-      alert('Geçersiz etkinlik ID');
+      try {
+        await this.authService.register(this.email, this.password, this.name, this.isEventOwner);
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Registration error:', error);
+        // Hata mesajını kullanıcıya göster
+      }
     }
   }
 }
