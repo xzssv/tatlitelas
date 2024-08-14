@@ -2,6 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+interface Photo {
+  id: string;
+  name: string;
+  url: string;
+  date: Date;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -43,9 +50,32 @@ export class HomeComponent {
     const element = event.target as HTMLInputElement;
     const fileList: FileList | null = element.files;
     if (fileList) {
-      // Dosya yükleme işlemlerini burada gerçekleştirin
-      console.log('Seçilen dosyalar:', fileList);
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const photo: Photo = {
+            id: Date.now().toString() + i,
+            name: file.name,
+            url: e.target.result,
+            date: new Date()
+          };
+          this.savePhoto(photo);
+        };
+        reader.readAsDataURL(file);
+      }
     }
+  }
+
+  savePhoto(photo: Photo) {
+    const photos = this.getPhotos();
+    photos.push(photo);
+    localStorage.setItem('photos', JSON.stringify(photos));
+  }
+
+  getPhotos(): Photo[] {
+    const photosString = localStorage.getItem('photos');
+    return photosString ? JSON.parse(photosString) : [];
   }
 
   goToGallery() {
