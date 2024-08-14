@@ -9,9 +9,29 @@
   --color-custom-brown: #CB997E;
 }
 
+@keyframes gradient-rotation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 body {
   @apply font-sans;
-  background: linear-gradient(to bottom, #FFF8E7 0%, #FBE7E9 50%, #F8D5DA 100%);
+  background: linear-gradient(
+    -45deg,
+    #FFF8E7,
+    #FBE7E9,
+    #F8D5DA,
+    #FFE5D9
+  );
+  background-size: 400% 400%;
+  animation: gradient-rotation 15s ease infinite;
   background-attachment: fixed;
   min-height: 100vh;
 }
