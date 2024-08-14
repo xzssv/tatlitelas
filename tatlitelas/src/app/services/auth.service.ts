@@ -1,138 +1,140 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User as FirebaseUser } from '@angular/fire/auth';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { Event } from '../models/event.model';
-import { Participant } from '../models/participant.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private users: User[] = [];
-    private currentUser: User | null = null;
-    private currentEvent: Event | null = null;
-    private currentParticipant: Participant | null = null;
+    private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+    private currentEventSubject: BehaviorSubject<Event | null> = new BehaviorSubject<Event | null>(null);
 
-    constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-        // Initialize with a sample event owner
-        this.users.push({
-            id: '1',
-            name: 'Sample Owner',
-            email: 'owner@example.com',
-            password: 'password',
-            isEventOwner: true
+    constructor(
+        private auth: Auth,
+        private firestore: Firestore
+    ) {
+        this.initAuthListener();
+    }
+
+    private initAuthListener() {
+        onAuthStateChanged(this.auth, (firebaseUser) => {
+            if (firebaseUser) {
+                this.getUserData(firebaseUser.uid).then(userData => {
+                    this.currentUserSubject.next(userData);
+                });
+            } else {
+                this.currentUserSubject.next(null);
+            }
         });
     }
 
-    private getLocalStorage(key: string): string | null {
-        if (isPlatformBrowser(this.platformId)) {
-            return localStorage.getItem(key);
+    private async getUserData(userId: string): Promise<User | null> {
+        const userDoc = await getDoc(doc(this.firestore, 'users', userId));
+        if (userDoc.exists()) {
+            return userDoc.data() as User;
         }
         return null;
     }
 
-    private setLocalStorage(key: string, value: string): void {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem(key, value);
-        }
-    }
-
-    private removeLocalStorage(key: string): void {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.removeItem(key);
-        }
-    }
-
-    login(email: string, password: string): boolean {
-        const user = this.users.find((u: User) => u.email === email && u.password === password);
-        if (user) {
-            this.currentUser = user;
-            this.setLocalStorage('currentUser', JSON.stringify(user));
+    async login(email: string, password: string): Promise<boolean> {
+        try {
+            await signInWithEmailAndPassword(this.auth, email, password);
             return true;
+        } catch (error) {
+            console.error('Login error:', error);
+            return false;
         }
-        return false;
     }
 
-    participantLogin(eventId: string): boolean {
-        const event = this.getEventById(eventId);
-        if (event) {
-            this.currentEvent = event;
-            this.setLocalStorage('currentEvent', JSON.stringify(event));
+    async register(email: string, password: string, name: string, isEventOwner: boolean): Promise<boolean> {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+            const user: User = {
+                id: userCredential.user.uid,
+                name,
+                email,
+                isEventOwner
+            };
+            await setDoc(doc(this.firestore, 'users', user.id), user);
             return true;
+        } catch (error) {
+            console.error('Registration error:', error);
+            return false;
         }
-        return false;
     }
 
-    getCurrentParticipant(): Participant | null {
-        if (!this.currentParticipant) {
-            const storedParticipant = this.getLocalStorage('currentParticipant');
-            if (storedParticipant) {
-                this.currentParticipant = JSON.parse(storedParticipant);
-            }
+    async logout() {
+        try {
+            await signOut(this.auth);
+            this.currentEventSubject.next(null);
+        } catch (error) {
+            console.error('Logout error:', error);
         }
-        return this.currentParticipant;
     }
 
+    getCurrentUser(): Observable<User | null> {
+        return this.currentUserSubject.asObservable();
+    }
 
-
-
-    logout() {
-        this.currentUser = null;
-        this.currentEvent = null;
-        this.removeLocalStorage('currentUser');
-        this.removeLocalStorage('currentEvent');
+    getCurrentEvent(): Observable<Event | null> {
+        return this.currentEventSubject.asObservable();
     }
 
     isLoggedIn(): boolean {
-        return this.getLocalStorage('currentUser') !== null || this.getLocalStorage('currentEvent') !== null;
+        return this.auth.currentUser !== null;
     }
 
     isEventOwner(): boolean {
-        const userString = this.getLocalStorage('currentUser');
-        if (userString) {
-            const user = JSON.parse(userString);
-            return user.isEventOwner || false;
-        }
-        return false;
+        const user = this.currentUserSubject.value;
+        return user ? user.isEventOwner : false;
     }
 
-    getCurrentUser(): User | null {
-        if (!this.currentUser) {
-            const storedUser = this.getLocalStorage('currentUser');
-            if (storedUser) {
-                this.currentUser = JSON.parse(storedUser);
-            }
-        }
-        return this.currentUser;
-    }
-
-    getCurrentEvent(): Event | null {
-        if (!this.currentEvent) {
-            const storedEvent = this.getLocalStorage('currentEvent');
-            if (storedEvent) {
-                this.currentEvent = JSON.parse(storedEvent);
-            }
-        }
-        return this.currentEvent;
-    }
-
-    saveEventSettings(settings: Partial<Event>) {
+    async saveEventSettings(settings: Partial<Event>) {
         if (this.isEventOwner()) {
-            this.currentEvent = { ...this.currentEvent, ...settings } as Event;
-            this.setLocalStorage('currentEvent', JSON.stringify(this.currentEvent));
+            const user = this.currentUserSubject.value;
+            if (user && settings.id) {
+                const eventRef = doc(this.firestore, 'events', settings.id);
+                await setDoc(eventRef, settings, { merge: true });
+                const updatedEvent = await getDoc(eventRef);
+                this.currentEventSubject.next(updatedEvent.data() as Event);
+            }
         }
     }
 
     getEventSettings(): Event | null {
-        return this.getCurrentEvent();
+        return this.currentEventSubject.value;
     }
 
-    getEventById(eventId: string): Event | null {
-        const storedEvent = this.getLocalStorage('currentEvent');
-        if (storedEvent) {
-            const event = JSON.parse(storedEvent);
-            return event.eventId === eventId ? event : null;
+    async getEventById(eventId: string): Promise<Event | null> {
+        const eventDoc = await getDoc(doc(this.firestore, 'events', eventId));
+        if (eventDoc.exists()) {
+            return eventDoc.data() as Event;
         }
         return null;
     }
+
+    async participantLogin(eventId: string): Promise<boolean> {
+        try {
+            const event = await this.getEventById(eventId);
+            if (event) {
+                this.currentEventSubject.next(event);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Participant login error:', error);
+            return false;
+        }
+    }
+
+
+
+
+
+
+
 }
+
