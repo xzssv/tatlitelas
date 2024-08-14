@@ -1,12 +1,12 @@
 export const environment = {
     production: false,
     firebase: {
-        apiKey: "AIzaSyDTiY8K-ISXPEsW-by_ytfPG8nufMxNA90",
-        authDomain: "tatlitelas-c46be.firebaseapp.com.firebaseapp.com",
-        projectId: "tatlitelas-c46be",
-        storageBucket: "tatlitelas-c46be.appspot.com",
-        messagingSenderId: "613034696422",
-        appId: "1:613034696422:web:a3079aebdaceb5ea43a527",
-        measurementId: "G-XZW4D828L7"
+        apiKey: "AIzaSyDontp8yT9WJbk_zh3U1WRMq06pLhdk2WQ",
+        authDomain: "tatlitelas-co.firebaseapp.com",
+        projectId: "tatlitelas-co",
+        storageBucket: "tatlitelas-co.appspot.com",
+        messagingSenderId: "737731170043",
+        appId: "1:737731170043:web:ed49285524c7fe62e16a5e",
+        measurementId: "G-HWW5PVH5H5"
     }
 };
