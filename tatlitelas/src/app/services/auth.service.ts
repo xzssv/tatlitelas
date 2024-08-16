@@ -37,11 +37,16 @@ export class AuthService {
                 this.getUserData(firebaseUser.uid).then(userData => {
                     console.log('User data fetched:', userData);
                     this.currentUserSubject.next(userData);
+                    if (this.router.url === '/login') {
+                        this.router.navigate(['/home']);
+                    }
                 });
             } else {
                 console.log('No user logged in');
                 this.currentUserSubject.next(null);
-                this.router.navigate(['/login']);
+                if (this.router.url !== '/login') {
+                    this.router.navigate(['/login']);
+                }
             }
         });
     }

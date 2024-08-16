@@ -5,17 +5,18 @@ import { LoginComponent } from './pages/login/login.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { AuthGuard } from './services/auth.guard';
 import { TestComponent } from './pages/test/test.component';
-
+import { LoginGuard } from './services/login.guard';
 
 export const routes: Routes = [
     {
         path: "",
-        redirectTo: "/login",
+        redirectTo: "/home",
         pathMatch: "full"
     },
     {
         path: "login",
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [LoginGuard] // Yeni eklenen guard
     },
     {
         path: "home",

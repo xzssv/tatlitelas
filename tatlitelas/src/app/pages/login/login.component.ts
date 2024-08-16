@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { take } from 'rxjs/operators';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,9 +18,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./login.component.css'],
   standalone: true,
   imports: [
-    CommonModule,  // For common Angular directives
-    FormsModule,   // For template-driven forms
-    // Angular Material modules
+    CommonModule,
+    FormsModule,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
@@ -30,7 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule
   ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -40,37 +38,43 @@ export class LoginComponent {
   name = '';
   isEventOwner = false;
   loader = false;
+  isCheckingAuth = true; // Yeni eklenen değişken
+
+  ngOnInit() {
+    this.authService.getCurrentUser().pipe(take(1)).subscribe(user => {
+      if (user) {
+        console.log('User already logged in, redirecting to home');
+        this.router.navigate(['/home']);
+      } else {
+        this.isCheckingAuth = false;
+      }
+    });
+  }
 
   toggleMode() {
     this.isLogin = !this.isLogin;
   }
 
   async onSubmit() {
-this.loader=true;
-
-    if (this.isLogin) {
-      try {
-        await this.authService.login(this.email, this.password);
-        this.router.navigate(['/home']);
-
-      } catch (error) {
-        console.error('Login error:', error);
-        // Hata mesajını kullanıcıya göster
-      } finally {
-        this.loader = false;  // İşlem bittiğinde veya hata olduğunda false yapıyoruz
-      }
-      
-    } else {
-      try {
-        await this.authService.register(this.email, this.password, this.name, this.isEventOwner);
-        this.router.navigate(['/home']);  
-      } catch (error) {
-        console.error('Registration error:', error);
-        // Hata mesajını kullanıcıya göster
-      } finally {
-        this.loader = false;  // İşlem bittiğinde veya hata olduğunda false yapıyoruz
-      }
+    if (this.isCheckingAuth) {
+      return; // Eğer hala kontrol ediyorsak, form gönderimini engelle
     }
-    
+
+    this.loader = true;
+
+    try {
+      if (this.isLogin) {
+        await this.authService.login(this.email, this.password);
+      } else {
+        await this.authService.register(this.email, this.password, this.name, this.isEventOwner);
+      }
+      this.router.navigate(['/home']);
+    } catch (error) {
+      console.error(this.isLogin ? 'Login error:' : 'Registration error:', error);
+      // Hata mesajını kullanıcıya göster
+      // Örneğin: this.errorMessage = 'Invalid email or password';
+    } finally {
+      this.loader = false;
+    }
   }
 }

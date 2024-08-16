@@ -1,5 +1,7 @@
 <div class="login-container flex items-center justify-center min-h-screen">
-  <mat-card class="w-full max-w-md p-6">
+  <mat-spinner *ngIf="isCheckingAuth"></mat-spinner>
+
+  <mat-card class="w-full max-w-md p-6" *ngIf="!isCheckingAuth">
     <mat-card-title class="text-2xl mb-4">{{ isLogin ? 'Login' : 'Register' }}</mat-card-title>
     <mat-card-content>
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
