@@ -1,6 +1,12 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from '@angular/fire/auth';
+import {
+    Auth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
