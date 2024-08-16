@@ -1,14 +1,48 @@
-<div class="login-container">
-    <h2>Login</h2>
-    <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" [(ngModel)]="username" name="username" required>
+<div class="flex items-center justify-center min-h-screen bg-[#CB997E]">
+  <mat-card class="w-full max-w-md p-8 space-y-6 bg-white shadow-lg">
+    <mat-card-title class="text-2xl font-bold text-center text-gray-800">
+      {{ isLogin ? 'Login' : 'Register' }}
+    </mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div *ngIf="!isLogin" class="w-full">
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">First name</label>
+          <input type="text" id="first_name" [(ngModel)]="name" name="name" required 
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                 placeholder="John" required />
         </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" [(ngModel)]="password" name="password" required>
+        
+        <div class="w-full">
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+          <input type="email" id="email" [(ngModel)]="email" name="email" required 
+                 class="bg-slate-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                 placeholder="john@example.com" required />
         </div>
-        <button type="submit">Login</button>
-    </form>
+        
+        <div class="w-full">
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+          <input type="password" id="password" [(ngModel)]="password" name="password" required 
+                 class="bg-slate-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                 placeholder="•••••••••" required />
+        </div>
+        
+        <mat-checkbox *ngIf="!isLogin" [(ngModel)]="isEventOwner" name="isEventOwner" class="block mb-4">
+          Is Event Owner
+        </mat-checkbox>
+        
+        <button mat-flat-button color="primary" type="submit" [disabled]="loader" class="w-full">
+          <mat-spinner *ngIf="loader" diameter="20" class="inline-block mr-2"></mat-spinner>
+          {{ isLogin ? 'Login' : 'Register' }}
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="text-center">
+      <p class="text-gray-600">
+        {{ isLogin ? 'Don\'t have an account?' : 'Already have an account?' }}
+        <a (click)="toggleMode()" class="text-blue-500 cursor-pointer hover:underline">
+          {{ isLogin ? 'Register' : 'Login' }}
+        </a>
+      </p>
+    </mat-card-actions>
+  </mat-card>
 </div>
