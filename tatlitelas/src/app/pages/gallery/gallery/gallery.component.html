@@ -1,10 +1,37 @@
-<div class="gallery-container">
-  <div class="gallery">
-    <div *ngFor="let photo of photos$ | async" class="gallery-item">
-      <img [src]="photo.url" [alt]="photo.name" (click)="openLightbox(photo)">
+<div class="gallery-container p-4">
+  <div class="mb-6 flex flex-wrap gap-2">
+    <button (click)="selectAllPhotos()" class="btn btn-primary">Tümünü Seç</button>
+    <button (click)="deselectAllPhotos()" class="btn btn-secondary">Seçimi Kaldır</button>
+    <button (click)="deleteSelectedPhotos()" [disabled]="selectedPhotos.length === 0" class="btn btn-danger">Seçilenleri
+      Sil</button>
+    <button (click)="downloadSelectedPhotos()" [disabled]="selectedPhotos.length === 0"
+      class="btn btn-success">Seçilenleri İndir</button>
+    <button (click)="deleteAllPhotos()" class="btn btn-danger">Tümünü Sil</button>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div *ngFor="let photo of photos$ | async"
+      class="relative aspect-square overflow-hidden rounded-lg shadow-md group cursor-pointer"
+      (click)="togglePhotoSelection(photo)">
+      <img [src]="photo.url" [alt]="photo.name"
+        class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
+      <div class="absolute top-0 right-0 m-2">
+        <input type="checkbox" [checked]="photo.selected"
+          class="form-checkbox h-6 w-6 text-blue-600 transition duration-150 ease-in-out"
+          (click)="$event.stopPropagation()">
+      </div>
+      <div *ngIf="photo.selected" class="absolute inset-0 bg-blue-500 bg-opacity-30 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
     </div>
   </div>
-  <div *ngIf="(photos$ | async)?.length === 0">No photos available.</div>
+
+  <div *ngIf="(photos$ | async)?.length === 0" class="text-center text-gray-500 mt-8">
+    Fotoğraf bulunamadı.
+  </div>
 </div>
 
 <button class="fixed-back-btn" (click)="goBack()">
@@ -13,10 +40,3 @@
   </svg>
   <span class="back-text">Geri Dön</span>
 </button>
-
-<div class="lightbox" *ngIf="selectedPhoto" (click)="closeLightbox()">
-  <div class="lightbox-content" (click)="$event.stopPropagation()">
-    <img [src]="selectedPhoto.url" [alt]="selectedPhoto.name">
-    <a class="download-btn" [href]="selectedPhoto.url" download="">İndir</a>
-  </div>
-</div>

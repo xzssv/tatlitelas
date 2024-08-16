@@ -1,65 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Roboto:wght@300;400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --color-primary: #6B705C;
-  --color-secondary: #A5A58D;
-  --color-custom-green: #7dad7d;
-  --color-custom-brown: #CB997E;
-}
-
-.text-primary {
-  color: var(--color-primary);
-}
-
-/* Galeri Container ve Grid */
-.gallery-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
-  justify-content: center;
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-semibold text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 focus:ring-blue-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-500 hover:bg-gray-600 focus:ring-gray-500;
+  }
+  
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-600 focus:ring-red-500;
+  }
+  
+  .btn-success {
+    @apply bg-green-500 hover:bg-green-600 focus:ring-green-500;
+  }
+  
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
 }
 
 .gallery-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  aspect-ratio: 1 / 1;
-  background-color: transparent; /* Arka planı şeffaf yaptık */
-}
-
-.gallery-item:hover {
-  transform: scale(1.05);
+  @apply relative overflow-hidden rounded-lg shadow-md aspect-square;
 }
 
 .gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Fotoğrafı tam sığdır */
-  object-position: center; /* Fotoğrafı ortala */
-  cursor: pointer;
-  background-color: transparent; /* Resmin arka planını şeffaf yap */
+  @apply w-full h-full object-cover transition-transform duration-300 ease-in-out;
 }
 
-/* Geri Dön butonu stilleri */
-.fixed-gallery-btn,
+.gallery-item:hover img {
+  @apply scale-105;
+}
+
+.photo-overlay {
+  @apply absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+}
+
+.gallery-item:hover .photo-overlay {
+  @apply opacity-100;
+}
+
+.form-checkbox {
+  @apply h-6 w-6 text-blue-600 transition duration-150 ease-in-out;
+}
+
 .fixed-back-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
   background-color: var(--color-custom-brown);
   color: white;
   border: none;
+  border-radius: 30px;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -70,12 +72,10 @@
   padding: 0;
 }
 
-.fixed-gallery-btn:hover,
 .fixed-back-btn:hover {
   width: 150px;
 }
 
-.fixed-gallery-btn svg,
 .fixed-back-btn svg {
   width: 24px;
   height: 24px;
@@ -84,7 +84,6 @@
   margin: 0 18px;
 }
 
-.gallery-text,
 .back-text {
   white-space: nowrap;
   opacity: 0;
@@ -99,95 +98,6 @@
   height: 100%;
 }
 
-.fixed-gallery-btn:hover .gallery-text,
 .fixed-back-btn:hover .back-text {
   opacity: 1;
 }
-
-/* Lightbox */
-.lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-}
-
-.lightbox-content {
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.download-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #000;
-  padding: 8px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.download-btn:hover {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-/* Yükle butonu için eski stil */
-.btnc {
-  padding: 12px 24px;
-  background-color: var(--color-custom-green);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btnc:hover {
-  background-color: var(--color-primary);
-}
-
-.btnc svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-}
-
-/* Responsive tasarım */
-@media (max-width: 1200px) {
-    .gallery {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .gallery {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .gallery {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
