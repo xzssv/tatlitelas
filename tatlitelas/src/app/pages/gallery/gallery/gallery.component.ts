@@ -58,7 +58,7 @@ export class GalleryComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   openLightbox(photo: Photo) {
