@@ -4,6 +4,7 @@ import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signO
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,8 @@ export class AuthService {
     constructor(
         private auth: Auth,
         private firestore: Firestore,
-        @Inject(PLATFORM_ID) platformId: Object
+        @Inject(PLATFORM_ID) platformId: Object,
+        private router: Router
     ) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -27,44 +29,91 @@ export class AuthService {
         onAuthStateChanged(this.auth, (firebaseUser) => {
             if (firebaseUser) {
                 this.getUserData(firebaseUser.uid).then(userData => {
+                    console.log('User data fetched:', userData);
                     this.currentUserSubject.next(userData);
                 });
             } else {
+                console.log('No user logged in');
                 this.currentUserSubject.next(null);
+                this.router.navigate(['/login']);
             }
         });
     }
 
     private async getUserData(userId: string): Promise<User | null> {
+        console.log('Fetching user data for userId:', userId);
         const userDoc = await getDoc(doc(this.firestore, 'users', userId));
         if (userDoc.exists()) {
-            return userDoc.data() as User;
+            const userData = userDoc.data() as User;
+            console.log('User data from Firestore:', userData);
+            return userData;
         }
+        console.log('No user document found in Firestore for userId:', userId);
         return null;
     }
 
     async login(email: string, password: string): Promise<void> {
         if (this.isBrowser) {
-            await signInWithEmailAndPassword(this.auth, email, password);
+            try {
+                const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+                let userData = await this.getUserData(userCredential.user.uid);
+                if (!userData) {
+                    userData = {
+                        id: userCredential.user.uid,
+                        name: userCredential.user.displayName || 'Unknown',
+                        email: userCredential.user.email || '',
+                        isEventOwner: false,
+                        eventId: undefined
+                    };
+                    await setDoc(doc(this.firestore, 'users', userData.id), {
+                        ...userData,
+                        eventId: null
+                    });
+                    console.log('Created new user document in Firestore:', userData);
+                }
+                this.currentUserSubject.next(userData);
+                this.router.navigate(['/home']);
+            } catch (error) {
+                console.error('Login error:', error);
+                throw error;
+            }
         }
     }
 
     async register(email: string, password: string, name: string, isEventOwner: boolean): Promise<void> {
         if (this.isBrowser) {
-            const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-            const user: User = {
-                id: userCredential.user.uid,
-                name,
-                email,
-                isEventOwner
-            };
-            await setDoc(doc(this.firestore, 'users', user.id), user);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+                const user: User = {
+                    id: userCredential.user.uid,
+                    name,
+                    email,
+                    isEventOwner,
+                    eventId: isEventOwner ? this.generateEventId() : undefined
+                };
+                await setDoc(doc(this.firestore, 'users', user.id), {
+                    ...user,
+                    eventId: user.eventId || null
+                });
+                console.log('User registered and saved to Firestore:', user);
+                this.currentUserSubject.next(user);
+                this.router.navigate(['/home']);
+            } catch (error) {
+                console.error('Registration error:', error);
+                throw error;
+            }
         }
+    }
+
+    private generateEventId(): string {
+        return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
     async logout(): Promise<void> {
         if (this.isBrowser) {
             await signOut(this.auth);
+            this.currentUserSubject.next(null);
+            this.router.navigate(['/login']);
         }
     }
 
@@ -73,7 +122,7 @@ export class AuthService {
     }
 
     isLoggedIn(): boolean {
-        return this.auth.currentUser !== null;
+        return this.currentUserSubject.value !== null;
     }
 
     isEventOwner(): boolean {
@@ -83,8 +132,8 @@ export class AuthService {
 
     async getEventSettings(): Promise<any> {
         const user = this.currentUserSubject.value;
-        if (user && user.isEventOwner) {
-            const eventDoc = await getDoc(doc(this.firestore, 'events', user.id));
+        if (user && user.isEventOwner && user.eventId) {
+            const eventDoc = await getDoc(doc(this.firestore, 'events', user.eventId));
             if (eventDoc.exists()) {
                 return eventDoc.data();
             }
@@ -94,8 +143,8 @@ export class AuthService {
 
     async saveEventSettings(settings: any): Promise<void> {
         const user = this.currentUserSubject.value;
-        if (user && user.isEventOwner) {
-            await updateDoc(doc(this.firestore, 'events', user.id), settings);
+        if (user && user.isEventOwner && user.eventId) {
+            await updateDoc(doc(this.firestore, 'events', user.eventId), settings);
         }
     }
 }

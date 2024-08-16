@@ -37,23 +37,42 @@ export class GalleryComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.authService.getCurrentUser().subscribe(user => {
-        if (user && user.eventId) {
-          this.eventId = user.eventId;
+        console.log('Current user:', user);
+        if (user) {
+          this.eventId = user.eventId || null;
+          console.log('Current user eventId:', this.eventId);
           this.loadPhotos();
+        } else {
+          console.log('No user logged in');
+          this.router.navigate(['/login']);
         }
       });
     }
   }
 
   loadPhotos() {
+    console.log('Loading photos for eventId:', this.eventId);
     const photosRef = collection(this.firestore, 'photos');
-    const q = query(photosRef,
-      where('eventId', '==', this.eventId),
-      orderBy('createdAt', 'desc')
-    );
+    let q;
+    if (this.eventId) {
+      q = query(photosRef,
+        where('eventId', '==', this.eventId),
+        orderBy('createdAt', 'desc')
+      );
+    } else {
+      q = query(photosRef, orderBy('createdAt', 'desc'));
+    }
 
     this.photos$ = collectionData(q, { idField: 'id' }).pipe(
-      map(actions => actions as Photo[])
+      map(actions => {
+        console.log('Fetched photos:', actions);
+        return actions as Photo[];
+      })
+    );
+
+    this.photos$.subscribe(
+      photos => console.log('Number of photos loaded:', photos.length),
+      error => console.error('Error fetching photos:', error)
     );
   }
 
