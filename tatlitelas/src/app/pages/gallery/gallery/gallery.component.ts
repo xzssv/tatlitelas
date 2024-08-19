@@ -39,7 +39,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.authService.getCurrentUser().subscribe((user: any) => {
       console.log('Mevcut kullanıcı:', user);
       if (user) {
         this.eventId = user.eventId || null;
