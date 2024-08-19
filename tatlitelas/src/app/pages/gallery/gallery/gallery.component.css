@@ -2,32 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .btn {
-    @apply px-4 py-2 rounded-md font-semibold text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center;
-  }
-  
-  .btn-primary {
-    @apply bg-blue-500 hover:bg-blue-600 focus:ring-blue-500;
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-500 hover:bg-gray-600 focus:ring-gray-500;
-  }
-  
-  .btn-danger {
-    @apply bg-red-500 hover:bg-red-600 focus:ring-red-500;
-  }
-  
-  .btn-success {
-    @apply bg-green-500 hover:bg-green-600 focus:ring-green-500;
-  }
-  
-  .btn:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
-}
-
 .gallery-item {
   @apply relative overflow-hidden rounded-lg shadow-md aspect-square;
 }
@@ -41,63 +15,54 @@
 }
 
 .photo-overlay {
-  @apply absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+  @apply absolute inset-0 bg-blue-500 bg-opacity-50 flex items-center justify-center;
 }
 
-.gallery-item:hover .photo-overlay {
-  @apply opacity-100;
-}
-
-.form-checkbox {
-  @apply h-6 w-6 text-blue-600 transition duration-150 ease-in-out;
+.gallery-item.selected {
+  @apply ring-4 ring-blue-500;
 }
 
 .fixed-back-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--color-custom-brown);
-  color: white;
-  border: none;
-  border-radius: 30px;
+  @apply fixed bottom-4 right-4 p-3 bg-amber-300 text-white rounded-full shadow-lg 
+         flex items-center justify-center transition-all duration-300 ease-in-out;
   width: 60px;
   height: 60px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  z-index: 1000;
-  padding: 0;
 }
 
 .fixed-back-btn:hover {
+  @apply bg-amber-400;
   width: 150px;
 }
 
 .fixed-back-btn svg {
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  flex-shrink: 0;
-  margin: 0 18px;
+  @apply w-6 h-6;
 }
 
 .back-text {
-  white-space: nowrap;
-  opacity: 0;
-  transition: all 0.3s ease-in-out;
-  position: absolute;
-  left: 60px;
-  right: 0;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+  @apply ml-2 hidden;
 }
 
 .fixed-back-btn:hover .back-text {
-  opacity: 1;
+  @apply inline;
+}
+
+/* Buton stilleri */
+.btn {
+  @apply px-4 py-2 rounded-md font-semibold text-white transition-colors duration-300;
+}
+
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-gray-500 hover:bg-gray-600;
+}
+
+.btn-danger {
+  @apply bg-red-500 hover:bg-red-600;
+}
+
+.btn-success {
+  @apply bg-green-500 hover:bg-green-600;
 }

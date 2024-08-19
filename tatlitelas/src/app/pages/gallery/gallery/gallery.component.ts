@@ -40,13 +40,13 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe(user => {
-      console.log('Current user:', user);
+      console.log('Mevcut kullanıcı:', user);
       if (user) {
         this.eventId = user.eventId || null;
-        console.log('Current user eventId:', this.eventId);
+        console.log('Mevcut kullanıcı eventId:', this.eventId);
         this.loadPhotos();
       } else {
-        console.log('No user logged in');
+        console.log('Giriş yapmış kullanıcı yok');
         this.router.navigate(['/login']);
       }
     });
@@ -59,7 +59,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   loadPhotos() {
-    console.log('Loading photos for eventId:', this.eventId);
+    console.log('Fotoğraflar yükleniyor, eventId:', this.eventId);
     const photosRef = collection(this.firestore, 'photos');
     let q;
     if (this.eventId) {
@@ -73,7 +73,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     this.photos$ = collectionData(q, { idField: 'id' }).pipe(
       map((actions: DocumentData[]) => {
-        console.log('Fetched photos:', actions);
+        console.log('Alınan fotoğraflar:', actions);
         return actions.map((photo: DocumentData) => ({
           id: photo['id'] as string,
           name: photo['name'] as string,
@@ -87,10 +87,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     this.photosSubscription = this.photos$.subscribe(
       photos => {
-        console.log('Number of photos loaded:', photos.length);
+        console.log('Yüklenen fotoğraf sayısı:', photos.length);
         this.updateSelectedPhotos();
       },
-      error => console.error('Error fetching photos:', error)
+      error => console.error('Fotoğrafları alırken hata oluştu:', error)
     );
   }
 
@@ -122,12 +122,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
       map(photos => photos.filter(photo => photo.selected))
     ).subscribe(selectedPhotos => {
       this.selectedPhotos = selectedPhotos;
-      console.log('Selected photos:', this.selectedPhotos.length);
+      console.log('Seçilen fotoğraflar:', this.selectedPhotos.length);
     });
   }
 
   async deleteSelectedPhotos() {
-    console.log('Deleting selected photos:', this.selectedPhotos.length);
+    console.log('Seçilen fotoğraflar siliniyor:', this.selectedPhotos.length);
     for (const photo of this.selectedPhotos) {
       await this.deletePhoto(photo);
     }
@@ -144,22 +144,22 @@ export class GalleryComponent implements OnInit, OnDestroy {
       }
       this.loadPhotos();
     } catch (error) {
-      console.error('Error deleting all photos:', error);
+      console.error('Tüm fotoğrafları silerken hata oluştu:', error);
     }
   }
 
   private async deletePhoto(photo: Photo) {
     try {
-      // Delete from Firestore
+      // Firestore'dan sil
       await deleteDoc(doc(this.firestore, 'photos', photo.id));
 
-      // Delete from Storage
+      // Storage'dan sil
       const storageRef = ref(this.storage, photo.url);
       await deleteObject(storageRef);
 
-      console.log('Photo deleted successfully:', photo.id);
+      console.log('Fotoğraf başarıyla silindi:', photo.id);
     } catch (error) {
-      console.error('Error deleting photo:', error);
+      console.error('Fotoğraf silinirken hata oluştu:', error);
     }
   }
 
