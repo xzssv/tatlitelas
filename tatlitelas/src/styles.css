@@ -41,11 +41,13 @@
 
   /* Home Component Styles */
   .home-title {
-    @apply font-dancing text-5xl text-primary mb-2.5;
+    @apply text-5xl text-primary mb-2.5;
+    font-family: 'Dancing Script', cursive;
   }
 
   .home-date {
-    @apply font-great-vibes text-4xl text-secondary mb-7.5;
+    @apply text-4xl text-secondary mb-7.5;
+    font-family: 'Great Vibes', cursive;
   }
 
   .btnc {
