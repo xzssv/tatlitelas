@@ -86,4 +86,8 @@ export class HomeComponent implements OnInit {
   goToGallery() {
     this.router.navigate(['/gallery']);
   }
+
+  goToSettings() {
+    this.router.navigate(['/admin']);
+  }
 }

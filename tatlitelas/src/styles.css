@@ -48,7 +48,7 @@ body {
 
 @layer components {
   .fixed-back-button {
-    @apply fixed bottom-4 right-4 p-3 border-none rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center bg-custom-brown text-white shadow-md;
+    @apply fixed bottom-4 right-4 p-3 border-none rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center bg-custom-green text-white shadow-md;
   }
 
   .fixed-back-button:hover {
@@ -67,5 +67,3 @@ body {
     @apply scale-105;
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

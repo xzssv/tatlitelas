@@ -23,8 +23,9 @@
 }
 
 .fixed-back-btn {
-  @apply fixed bottom-4 right-4 p-3 bg-amber-300 text-white rounded-full shadow-lg 
+  @apply fixed bottom-4 right-4 p-3 text-white rounded-full shadow-lg 
          flex items-center justify-center transition-all duration-300 ease-in-out;
+         background-color: var(--color-custom-green);
   width: 60px;
   height: 60px;
 }
