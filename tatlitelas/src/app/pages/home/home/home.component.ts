@@ -9,8 +9,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
   title = 'Buse & Aydoğan';
