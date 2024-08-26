@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   name = '';
   isEventOwner = false;
   loader = false;
-  isCheckingAuth = true; // Yeni eklenen değişken
+  isCheckingAuth = true;
 
   ngOnInit() {
     this.authService.getCurrentUser().pipe(take(1)).subscribe(user => {
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
 
   async onSubmit() {
     if (this.isCheckingAuth) {
-      return; // Eğer hala kontrol ediyorsak, form gönderimini engelle
+      return;
     }
 
     this.loader = true;

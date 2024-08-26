@@ -29,7 +29,7 @@
   }
 
   .animate-gradient {
-    animation: gradient-rotation 15s ease infinite;
+    animation: gradient-rotation 5s ease infinite;
   }
 }
 
