@@ -36,8 +36,8 @@ export class AdminComponent implements OnInit {
       eventDate: '',
       eventId: '',
       description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!',
-      startDate: this.formatDateForInput(new Date()),
-      endDate: this.formatDateForInput(new Date()),
+      startDate: this.formatDateTimeForInput(new Date()),
+      endDate: this.formatDateTimeForInput(new Date()),
       eventType: ''
     };
 
@@ -52,8 +52,8 @@ export class AdminComponent implements OnInit {
       if (settings) {
         this.eventSettings = { ...this.eventSettings, ...settings };
         if (settings.date) {
-          this.eventSettings.startDate = this.formatDateForInput(new Date(settings.date));
-          this.eventSettings.endDate = this.formatDateForInput(new Date(settings.date));
+          this.eventSettings.startDate = this.formatDateTimeForInput(new Date(settings.date));
+          this.eventSettings.endDate = this.formatDateTimeForInput(new Date(settings.date));
         }
       }
     });
@@ -66,7 +66,7 @@ export class AdminComponent implements OnInit {
   }
 
   generateEventId() {
-    this.eventSettings.eventId = Math.floor(100000 + Math.random() * 900000).toString();
+    this.eventSettings.eventId = Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
   saveEventSettings() {
@@ -85,7 +85,7 @@ export class AdminComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  private formatDateForInput(date: Date): string {
-    return date.toISOString().split('T')[0];
+  private formatDateTimeForInput(date: Date): string {
+    return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:mm
   }
 }
