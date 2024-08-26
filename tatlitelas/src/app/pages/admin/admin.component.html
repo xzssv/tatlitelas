@@ -33,7 +33,7 @@
                         'Yeni Etkinlik Oluştur' }}</h3>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
+                        <div>
                             <label for="eventType" class="block mb-2 text-sm font-medium text-gray-700">Etkinlik
                                 Türü</label>
                             <select id="eventType" name="eventType" [(ngModel)]="currentEvent.eventType"
@@ -45,6 +45,27 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="eventCode" class="block mb-2 text-sm font-medium text-gray-700">Etkinlik
+                                Kodu</label>
+                            <div class="relative">
+                                <input type="text" id="eventCode" name="eventCode" [(ngModel)]="currentEvent.eventCode"
+                                    maxlength="20"
+                                    class="w-full p-2 pr-10 border rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <button type="button" (click)="generateEventCode()"
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:text-blue-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <small class="text-gray-500 text-xs">{{ 20 - (currentEvent.eventCode?.length || 0) }}
+                                karakter hakkınız kaldı. Maksimum 20 karakter kullanabilirsiniz. :)</small>
+                        </div>
+
                         <div class="col-span-2">
                             <label for="eventName" class="block mb-2 text-sm font-medium text-gray-700">Etkinlik
                                 Adı</label>
@@ -53,7 +74,7 @@
                                 class="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
                                 required>
                             <small class="text-gray-500 text-xs">{{ 50 - (currentEvent.name?.length || 0) }} karakter
-                                hakkınız kaldı. Maksimum 50 karakter kullanabilirsiniz. :) </small>
+                                hakkınız kaldı. Maksimum 50 karakter kullanabilirsiniz. :)</small>
                         </div>
 
                         <div *ngIf="showBrideGroomNames">
@@ -85,20 +106,6 @@
                                 [(ngModel)]="currentEvent.endDateTime"
                                 class="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
                                 required>
-                        </div>
-
-                        <div class="col-span-2">
-                            <label for="eventCode" class="block mb-2 text-sm font-medium text-gray-700">Etkinlik
-                                Kodu</label>
-                            <div class="flex space-x-2">
-                                <input type="text" id="eventCode" name="eventCode" [(ngModel)]="currentEvent.eventCode"
-                                    maxlength="20"
-                                    class="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                <button type="button" (click)="generateEventCode()"
-                                    class="bg-blue-500 hover:bg-blue-600 text-white text-xs py-2 px-4 rounded-full transition duration-300 ease-in-out">Yenile</button>
-                            </div>
-                            <small class="text-gray-500 text-xs">{{ 20 - (currentEvent.eventCode?.length || 0) }}
-                                karakter hakkınız kaldı. Maksimum 20 karakter kullanabilirsiniz. :) </small>
                         </div>
 
                         <div class="col-span-2">
