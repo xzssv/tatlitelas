@@ -46,9 +46,26 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  createNewEvent() {
+    this.currentEvent = this.initializeNewEvent();
+    this.showBrideGroomNames = false;
+  }
+
   editEvent(event: Event) {
     this.currentEvent = { ...event };
     this.showBrideGroomNames = event.eventType === 'Düğün Etkinlikleri';
+  }
+
+  deleteEvent(event: Event) {
+    if (confirm('Bu etkinliği silmek istediğinizden emin misiniz?')) {
+      this.firestoreService.deleteEvent(event.id).then(() => {
+        this.loadUserEvents();
+        alert('Etkinlik başarıyla silindi!');
+      }).catch(error => {
+        console.error('Etkinlik silinirken hata oluştu:', error);
+        alert('Etkinlik silinirken bir hata oluştu. Lütfen tekrar deneyin.');
+      });
+    }
   }
 
   initializeNewEvent(): Partial<Event> {
@@ -104,7 +121,7 @@ export class AdminComponent implements OnInit {
 
   cancel() {
     this.currentEvent = this.initializeNewEvent();
-    this.router.navigate(['/home']);
+    this.showBrideGroomNames = false;
   }
 
   private formatDateTimeForInput(date: Date): string {
