@@ -10,7 +10,7 @@ import { StorageService } from '../../services/storage.service';
     standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './test.component.html',
-    styleUrls: ['./test.component.css']
+    //styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit {
     isLoggedIn = false;

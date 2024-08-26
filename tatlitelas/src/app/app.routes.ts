@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { GalleryComponent } from './pages/gallery/gallery/gallery.component';
+import { GalleryComponent } from './pages/gallery/gallery.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { AuthGuard } from './services/auth.guard';
