@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Event as CustomEvent } from '../../models/event.model';
+import { FirestoreService } from '../../services/firestore.service';
+import { Event } from '../../models/event.model';
 
 @Component({
   selector: 'app-admin',
@@ -21,67 +22,88 @@ export class AdminComponent implements OnInit {
     'Kurumsal Etkinlikler'
   ];
 
-  eventSettings: Partial<CustomEvent> & {
-    description?: string,
-    startDate?: string,
-    endDate?: string,
-    eventType?: string
-  } = {
-      id: '',
-      name: '',
-      date: new Date(),
-      ownerId: '',
-      brideName: '',
-      groomName: '',
-      eventDate: '',
-      eventId: '',
-      description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!',
-      startDate: this.formatDateTimeForInput(new Date()),
-      endDate: this.formatDateTimeForInput(new Date()),
-      eventType: ''
-    };
+  userEvents: Event[] = [];
+  currentEvent: Partial<Event> = this.initializeNewEvent();
+  showBrideGroomNames: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private firestoreService: FirestoreService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    this.loadEventSettings();
+    this.loadUserEvents();
   }
 
-  loadEventSettings() {
-    this.authService.getEventSettings().then(settings => {
-      if (settings) {
-        this.eventSettings = { ...this.eventSettings, ...settings };
-        if (settings.date) {
-          this.eventSettings.startDate = this.formatDateTimeForInput(new Date(settings.date));
-          this.eventSettings.endDate = this.formatDateTimeForInput(new Date(settings.date));
+  loadUserEvents() {
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.firestoreService.getUserEvents(user.id).then(events => {
+          this.userEvents = events;
+        });
+      }
+    });
+  }
+
+  editEvent(event: Event) {
+    this.currentEvent = { ...event };
+    this.showBrideGroomNames = event.eventType === 'Düğün Etkinlikleri';
+  }
+
+  initializeNewEvent(): Partial<Event> {
+    return {
+      name: '',
+      eventType: '',
+      brideName: '',
+      groomName: '',
+      startDateTime: this.formatDateTimeForInput(new Date()),
+      endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)), // 1 hour later
+      eventCode: '',
+      description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!'
+    };
+  }
+
+  onEventTypeChange() {
+    this.showBrideGroomNames = this.currentEvent.eventType === 'Düğün Etkinlikleri';
+    if (!this.currentEvent.eventCode) {
+      this.generateEventCode();
+    }
+  }
+
+  generateEventCode() {
+    this.currentEvent.eventCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+
+  saveEventSettings() {
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        const eventData: Event = {
+          ...this.currentEvent as Event,
+          ownerId: user.id
+        };
+
+        if (eventData.id) {
+          // Update existing event
+          this.firestoreService.updateEvent(eventData).then(() => {
+            this.loadUserEvents();
+            this.currentEvent = this.initializeNewEvent();
+            alert('Etkinlik başarıyla güncellendi!');
+          });
+        } else {
+          // Create new event
+          this.firestoreService.createEvent(eventData).then(() => {
+            this.loadUserEvents();
+            this.currentEvent = this.initializeNewEvent();
+            alert('Yeni etkinlik başarıyla oluşturuldu!');
+          });
         }
       }
     });
   }
 
-  onEventTypeChange() {
-    if (!this.eventSettings.eventId) {
-      this.generateEventId();
-    }
-  }
-
-  generateEventId() {
-    this.eventSettings.eventId = Math.random().toString(36).substring(2, 8).toUpperCase();
-  }
-
-  saveEventSettings() {
-    // Combine start and end dates into a single date range string
-    this.eventSettings.eventDate = `${this.eventSettings.startDate} - ${this.eventSettings.endDate}`;
-
-    this.authService.saveEventSettings(this.eventSettings).then(() => {
-      alert('Ayarlar başarıyla kaydedildi!');
-    }).catch(error => {
-      console.error('Ayarlar kaydedilirken hata oluştu:', error);
-      alert('Ayarlar kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.');
-    });
-  }
-
   cancel() {
+    this.currentEvent = this.initializeNewEvent();
     this.router.navigate(['/home']);
   }
 

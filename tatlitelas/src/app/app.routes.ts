@@ -4,7 +4,6 @@ import { GalleryComponent } from './pages/gallery/gallery.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { AuthGuard } from './services/auth.guard';
-import { TestComponent } from './pages/test/test.component';
 import { LoginGuard } from './services/login.guard';
 
 export const routes: Routes = [
@@ -32,6 +31,5 @@ export const routes: Routes = [
         path: "admin",
         component: AdminComponent,
         canActivate: [AuthGuard]
-    },
-    { path: 'test', component: TestComponent }
+    }
 ];
