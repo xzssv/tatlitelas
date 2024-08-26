@@ -59,12 +59,6 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  onEventTypeChange() {
-    if (this.eventSettings.name === this.eventSettings.eventType || this.eventSettings.name === '') {
-      this.eventSettings.name = this.eventSettings.eventType || '';
-    }
-  }
-
   generateEventId() {
     this.eventSettings.eventId = Math.floor(100000 + Math.random() * 900000).toString();
   }
