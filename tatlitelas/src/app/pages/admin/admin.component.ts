@@ -77,7 +77,9 @@ export class AdminComponent implements OnInit {
       startDateTime: this.formatDateTimeForInput(new Date()),
       endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)), // 1 hour later
       eventCode: this.generateNumericEventCode(),
-      description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!'
+      description: '',
+      hideEventName: false,
+      qrOnly: false
     };
   }
 

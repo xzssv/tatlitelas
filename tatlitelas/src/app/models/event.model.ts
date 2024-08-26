@@ -9,4 +9,6 @@ export interface Event {
     endDateTime: string;
     eventCode: string;
     description?: string;
+    hideEventName: boolean;
+    qrOnly: boolean;
 }
