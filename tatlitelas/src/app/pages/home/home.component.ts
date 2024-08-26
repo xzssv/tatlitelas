@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { StorageService } from '../../../services/storage.service';
+import { StorageService } from '../../services/storage.service';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
