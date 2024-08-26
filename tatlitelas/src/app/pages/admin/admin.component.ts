@@ -35,7 +35,7 @@ export class AdminComponent implements OnInit {
       groomName: '',
       eventDate: '',
       eventId: '',
-      description: '',
+      description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!',
       startDate: this.formatDateForInput(new Date()),
       endDate: this.formatDateForInput(new Date()),
       eventType: ''
@@ -57,6 +57,12 @@ export class AdminComponent implements OnInit {
         }
       }
     });
+  }
+
+  onEventTypeChange() {
+    if (!this.eventSettings.eventId) {
+      this.generateEventId();
+    }
   }
 
   generateEventId() {
