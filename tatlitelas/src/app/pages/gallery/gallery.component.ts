@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Firestore, collection, query, where, orderBy, collectionData, deleteDoc, doc, DocumentData } from '@angular/fire/firestore';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Storage, ref, deleteObject } from '@angular/fire/storage';
@@ -32,7 +32,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     private router: Router,
     private firestore: Firestore,
     private storage: Storage,
-    private authService: AuthService
+    private authService: AuthService // AuthService'i constructor'da enjekte ediyoruz
   ) {
     this.photos$ = new Observable<Photo[]>();
   }
