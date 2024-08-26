@@ -76,20 +76,21 @@ export class AdminComponent implements OnInit {
       groomName: '',
       startDateTime: this.formatDateTimeForInput(new Date()),
       endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)), // 1 hour later
-      eventCode: '',
+      eventCode: this.generateNumericEventCode(),
       description: 'Güzel anılar bırakabilmek için QR kodu okutun ve bizimle paylaşın!'
     };
   }
 
   onEventTypeChange() {
     this.showBrideGroomNames = this.currentEvent.eventType === 'Düğün Etkinlikleri';
-    if (!this.currentEvent.eventCode) {
-      this.generateEventCode();
-    }
   }
 
   generateEventCode() {
-    this.currentEvent.eventCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    this.currentEvent.eventCode = this.generateNumericEventCode();
+  }
+
+  generateNumericEventCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
   saveEventSettings() {
