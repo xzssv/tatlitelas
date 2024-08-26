@@ -1,32 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Event as CustomEvent } from '../../models/event.model';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin.component.html'
 })
 export class AdminComponent implements OnInit {
-  eventSettings: Partial<CustomEvent> = {
-    brideName: '',
-    groomName: '',
-    eventDate: '',
-    eventId: ''
-  };
+  eventTypes = [
+    'Düğün Etkinlikleri',
+    'Doğum Günü',
+    'Lansman',
+    'Festival',
+    'Fuar',
+    'Kurumsal Etkinlikler'
+  ];
 
-  selectedFiles: FileList | null = null;
+  eventSettings: Partial<CustomEvent> & {
+    description?: string,
+    startDate?: string,
+    endDate?: string,
+    eventType?: string
+  } = {
+      id: '',
+      name: '',
+      date: new Date(),
+      ownerId: '',
+      brideName: '',
+      groomName: '',
+      eventDate: '',
+      eventId: '',
+      description: '',
+      startDate: this.formatDateForInput(new Date()),
+      endDate: this.formatDateForInput(new Date()),
+      eventType: ''
+    };
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    const settings = this.authService.getEventSettings();
-    if (settings) {
-      this.eventSettings = { ...this.eventSettings, ...settings };
+    this.loadEventSettings();
+  }
+
+  loadEventSettings() {
+    this.authService.getEventSettings().then(settings => {
+      if (settings) {
+        this.eventSettings = { ...this.eventSettings, ...settings };
+        if (settings.date) {
+          this.eventSettings.startDate = this.formatDateForInput(new Date(settings.date));
+          this.eventSettings.endDate = this.formatDateForInput(new Date(settings.date));
+        }
+      }
+    });
+  }
+
+  onEventTypeChange() {
+    if (this.eventSettings.name === this.eventSettings.eventType || this.eventSettings.name === '') {
+      this.eventSettings.name = this.eventSettings.eventType || '';
     }
   }
 
@@ -35,38 +70,22 @@ export class AdminComponent implements OnInit {
   }
 
   saveEventSettings() {
-    this.authService.saveEventSettings(this.eventSettings);
-    alert('Ayarlar başarıyla kaydedildi!');
+    // Combine start and end dates into a single date range string
+    this.eventSettings.eventDate = `${this.eventSettings.startDate} - ${this.eventSettings.endDate}`;
+
+    this.authService.saveEventSettings(this.eventSettings).then(() => {
+      alert('Ayarlar başarıyla kaydedildi!');
+    }).catch(error => {
+      console.error('Ayarlar kaydedilirken hata oluştu:', error);
+      alert('Ayarlar kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.');
+    });
   }
 
-  goToGallery() {
-    this.router.navigate(['/gallery']);
-  }
-
-  goToHome() {
+  cancel() {
     this.router.navigate(['/home']);
   }
 
-  onFileSelected(event: Event) {
-    const element = event.currentTarget as HTMLInputElement;
-    this.selectedFiles = element.files;
-    if (this.selectedFiles && this.selectedFiles.length > 0) {
-      this.uploadPhotos();
-    }
-  }
-
-  uploadPhotos() {
-    if (this.selectedFiles) {
-      // Fotoğraf yükleme mantığını burada uygulayın
-      console.log('Fotoğraflar yükleniyor:', this.selectedFiles);
-      alert('Fotoğraflar başarıyla yüklendi!');
-    } else {
-      alert('Lütfen yüklemek için fotoğraf seçin.');
-    }
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  private formatDateForInput(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 }
