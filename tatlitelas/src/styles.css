@@ -183,6 +183,23 @@
   .photo-container:hover img {
     @apply scale-105;
   }
+
+  .swal2-popup {
+    font-size: 0.875rem;
+  }
+  
+  .swal2-title {
+    font-size: 1.25rem;
+  }
+  
+  .swal2-content {
+    font-size: 1rem;
+  }
+  
+  .swal2-styled.swal2-confirm {
+    font-size: 0.875rem;
+  }
+
 }
 
 @keyframes gradient-rotation {

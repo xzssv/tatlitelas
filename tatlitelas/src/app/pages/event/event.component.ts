@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from '../../services/firestore.service';
 import { Event } from '../../models/event.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-event',
@@ -28,8 +29,6 @@ export class EventComponent implements OnInit {
   currentStep: number = 0;
   isSubmitting: boolean = false;
   isEditing: boolean = false;
-  showSuccessMessage: boolean = false;
-  successMessage: string = '';
 
   constructor(
     private authService: AuthService,
@@ -124,23 +123,24 @@ export class EventComponent implements OnInit {
         saveOperation.then(() => {
           this.loadUserEvents();
           this.isSubmitting = false;
-          this.successMessage = this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!';
-          this.showSuccessMessage = true;
+          this.showSuccessMessage();
           if (!this.isEditing) {
-            this.createNewEvent(); // Yeni etkinlik oluşturduktan sonra formu sıfırla
+            this.createNewEvent();
           }
         }).catch(error => {
           console.error('Etkinlik kaydedilirken hata oluştu:', error);
-          alert('Etkinlik kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: 'Etkinlik kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.',
+          });
           this.isSubmitting = false;
         });
       }
     });
   }
 
-  hideSuccessMessage() {
-    this.showSuccessMessage = false;
-  }
+
 
   setStep(step: number) {
     this.currentStep = step;
@@ -161,6 +161,18 @@ export class EventComponent implements OnInit {
     if (this.currentStep > 0) {
       this.currentStep--;
     }
+  }
+
+  showSuccessMessage() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Başarılı!',
+      text: this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'inline-block px-6 py-3 mb-0 font-bold text-center text-white uppercase align-middle transition-all border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-soft-xs bg-gradient-to-tl from-purple-700 to-pink-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25'
+      }
+    });
   }
 
   private formatDateTimeForInput(date: Date): string {
