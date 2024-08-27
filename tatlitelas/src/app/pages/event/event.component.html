@@ -3,28 +3,29 @@
         <div class="flex">
             <div class="w-1/3 bg-gray-50 p-6 overflow-y-auto max-h-screen border-r border-gray-200">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">Etkinlikleriniz</h2>
-                <button (click)="createNewEvent()"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-blue-600 transition duration-300">Yeni
-                    Etkinlik Oluştur</button>
-                <ul>
-                    <li *ngFor="let event of userEvents; let last = last" class="mb-2">
+                <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-md mb-4" (click)="createNewEvent()">
+                    Yeni Etkinlik Oluştur
+                </button>
+                <ng-container *ngIf="userEvents.length > 0; else noEvents">
+                    <div *ngFor="let event of userEvents; let last = last">
                         <div class="bg-transparent hover:bg-white/50 p-2 rounded-lg transition duration-300 ease-in-out cursor-pointer flex justify-between items-center"
                             (click)="editEvent(event)">
                             <span class="text-sm text-gray-700">{{ event.name }}</span>
-                            <button (click)="deleteEvent(event); $event.stopPropagation()"
-                                class="text-red-500 hover:text-red-700">
+                            <button class="text-red-500 hover:text-red-700" (click)="deleteEvent(event)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                     fill="currentColor">
                                     <path fill-rule="evenodd"
                                         d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                        clip-rule="evenodd" />
+                                        clip-rule="evenodd"></path>
                                 </svg>
                             </button>
                         </div>
                         <div *ngIf="!last" class="border-b border-gray-200 my-1"></div>
-                    </li>
-                </ul>
-                <p *ngIf="userEvents.length === 0" class="text-gray-500 text-sm">Henüz etkinlik bulunmamaktadır.</p>
+                    </div>
+                </ng-container>
+                <ng-template #noEvents>
+                    <p class="text-gray-500 text-center">Henüz etkinlik bulunmamaktadır.</p>
+                </ng-template>
             </div>
             <div class="w-2/3 p-6">
                 <div class="mb-8">
@@ -36,78 +37,79 @@
                                 {{ i + 1 }}
                             </div>
                             <span class="text-xs text-center"
-                                [ngClass]="{'text-blue-500 font-semibold': currentStep === i, 'text-gray-500': currentStep !== i}">{{
-                                step }}</span>
+                                [ngClass]="{'text-blue-500 font-semibold': currentStep === i, 'text-gray-500': currentStep !== i}">
+                                {{ step }}
+                            </span>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 h-1 mt-4">
                         <div class="bg-blue-500 h-1 transition-all duration-300"
-                            [style.width]="((currentStep + 1) / 4 * 100) + '%'"></div>
+                            [style.width]="((currentStep + 1) / 4 * 100) + '%'">
+                        </div>
                     </div>
                 </div>
 
-                <div class="min-h-[400px]"> <!-- Minimum height for content area -->
+                <div class="min-h-[400px]">
                     <div *ngIf="currentStep === 0">
                         <div class="mb-4">
-                            <label for="eventType" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik
-                                Türü</label>
+                            <label for="eventType" class="block text-sm font-medium text-gray-700">Etkinlik Türü</label>
                             <select id="eventType" [(ngModel)]="currentEvent.eventType" (change)="onEventTypeChange()"
-                                class="w-full p-2 border border-gray-300 rounded-md">
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label for="eventName" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik
-                                Adı</label>
+                            <label for="eventName" class="block text-sm font-medium text-gray-700">Etkinlik Adı</label>
                             <input type="text" id="eventName" [(ngModel)]="currentEvent.name"
-                                class="w-full p-2 border border-gray-300 rounded-md">
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
-                        <div *ngIf="showBrideGroomNames" class="mb-4">
-                            <label for="brideName" class="block text-sm font-medium text-gray-700 mb-1">Gelin
-                                Adı</label>
+                        <div class="mb-4" *ngIf="showBrideGroomNames">
+                            <label for="brideName" class="block text-sm font-medium text-gray-700">Gelin Adı</label>
                             <input type="text" id="brideName" [(ngModel)]="currentEvent.brideName"
-                                class="w-full p-2 border border-gray-300 rounded-md">
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
-                        <div *ngIf="showBrideGroomNames" class="mb-4">
-                            <label for="groomName" class="block text-sm font-medium text-gray-700 mb-1">Damat
-                                Adı</label>
+                        <div class="mb-4" *ngIf="showBrideGroomNames">
+                            <label for="groomName" class="block text-sm font-medium text-gray-700">Damat Adı</label>
                             <input type="text" id="groomName" [(ngModel)]="currentEvent.groomName"
-                                class="w-full p-2 border border-gray-300 rounded-md">
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div *ngIf="currentStep === 1">
                         <div class="mb-4">
-                            <label for="startDateTime" class="block text-sm font-medium text-gray-700 mb-1">Başlangıç
-                                Tarihi ve Saati</label>
-                            <input type="datetime-local" id="startDateTime" [(ngModel)]="currentEvent.startDateTime"
-                                class="w-full p-2 border border-gray-300 rounded-md">
-                        </div>
-                        <div class="mb-4">
-                            <label for="endDateTime" class="block text-sm font-medium text-gray-700 mb-1">Bitiş Tarihi
+                            <label for="startDateTime" class="block text-sm font-medium text-gray-700">Başlangıç Tarihi
                                 ve Saati</label>
-                            <input type="datetime-local" id="endDateTime" [(ngModel)]="currentEvent.endDateTime"
-                                class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="datetime-local" id="startDateTime" [(ngModel)]="currentEvent.startDateTime"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                         <div class="mb-4">
-                            <label for="description"
-                                class="block text-sm font-medium text-gray-700 mb-1">Misafirlerinize bir not
-                                bırakın!</label>
+                            <label for="endDateTime" class="block text-sm font-medium text-gray-700">Bitiş Tarihi ve
+                                Saati</label>
+                            <input type="datetime-local" id="endDateTime" [(ngModel)]="currentEvent.endDateTime"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="block text-sm font-medium text-gray-700">Misafirlerinize bir
+                                not bırakın!</label>
                             <textarea id="description" [(ngModel)]="currentEvent.description" rows="3"
-                                class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                         </div>
                     </div>
 
                     <div *ngIf="currentStep === 2">
                         <div class="mb-4 flex items-center">
                             <input type="checkbox" id="hideEventName" [(ngModel)]="currentEvent.hideEventName"
-                                class="mr-2">
-                            <label for="hideEventName" class="text-sm text-gray-700">Etkinlik adını gösterme</label>
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="hideEventName" class="ml-2 block text-sm text-gray-900">
+                                Etkinlik adını gösterme
+                            </label>
                         </div>
                         <div class="mb-4 flex items-center">
-                            <input type="checkbox" id="qrOnly" [(ngModel)]="currentEvent.qrOnly" class="mr-2">
-                            <label for="qrOnly" class="text-sm text-gray-700">Etkinliğe sadece QR ile erişim
-                                sağlanabilsin</label>
+                            <input type="checkbox" id="qrOnly" [(ngModel)]="currentEvent.qrOnly"
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="qrOnly" class="ml-2 block text-sm text-gray-900">
+                                Etkinliğe sadece QR ile erişim sağlanabilsin
+                            </label>
                         </div>
                     </div>
 
@@ -116,7 +118,7 @@
                             <span class="text-sm font-medium text-gray-700">Etkinlik Kodu:</span>
                             <div class="flex items-center">
                                 <span class="text-lg font-bold text-blue-600 mr-4">{{ currentEvent.eventCode }}</span>
-                                <button (click)="generateEventCode()" class="text-blue-500 hover:text-blue-700">
+                                <button (click)="generateEventCode()" class="bg-blue-500 text-white p-2 rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -127,30 +129,25 @@
                         </div>
                         <div
                             class="flex items-center justify-center bg-white p-4 rounded-lg shadow-md w-48 h-48 mx-auto mb-4">
-                            <img [src]="getQRCodeUrl()" alt="Event QR Code" class="w-full h-full object-contain">
+                            <img [src]="getQRCodeUrl()" alt="QR Code" class="w-full h-full object-contain">
                         </div>
-                        <p class="text-center text-sm text-gray-600">Bu QR kodu katılımcılarınızla paylaşın.
-                            Etkinliğinize kolay erişim sağlar.</p>
+                        <p class="text-center text-sm text-gray-600">
+                            Bu QR kodu katılımcılarınızla paylaşın. Etkinliğinize kolay erişim sağlar.
+                        </p>
                     </div>
                 </div>
 
                 <div class="flex justify-between mt-6">
-                    <button (click)="prevStep()" *ngIf="currentStep > 0"
-                        class="inline-block px-6 py-3 mb-0 font-bold text-center text-white uppercase align-middle transition-all border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-soft-xs bg-gradient-to-tl from-gray-700 to-gray-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25">
-                        Geri
-                    </button>
+                    <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md" (click)="prevStep()"
+                        *ngIf="currentStep > 0">Geri</button>
                     <div class="flex-grow"></div>
-                    <button *ngIf="currentStep < 3" (click)="nextStep()"
-                        class="inline-block px-6 py-3 mb-0 font-bold text-center text-white uppercase align-middle transition-all border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-soft-xs bg-gradient-to-tl from-blue-700 to-blue-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25">
-                        İleri
-                    </button>
-                    <button *ngIf="currentStep === 3" (click)="saveEventSettings()"
-                        class="inline-block px-6 py-3 mb-0 font-bold text-center text-white uppercase align-middle transition-all border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-soft-xs bg-gradient-to-tl from-purple-700 to-pink-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md" (click)="nextStep()"
+                        *ngIf="currentStep < 3">İleri</button>
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-md" (click)="saveEventSettings()"
+                        *ngIf="currentStep === 3">
                         {{ isEditing ? 'Güncelle' : 'Oluştur' }}
                     </button>
                 </div>
-
-
             </div>
         </div>
     </div>

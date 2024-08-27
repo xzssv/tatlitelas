@@ -108,6 +108,31 @@ export class EventComponent implements OnInit {
   saveEventSettings() {
     if (this.isSubmitting) return;
 
+    if (this.isEditing) {
+      this.showConfirmationDialog();
+    } else {
+      this.performSaveOperation();
+    }
+  }
+
+  showConfirmationDialog() {
+    Swal.fire({
+      title: 'Değişiklikleri kaydetmek istiyor musunuz?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Kaydet',
+      denyButtonText: `Kaydetme`,
+      cancelButtonText: 'İptal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performSaveOperation();
+      } else if (result.isDenied) {
+        Swal.fire('Değişiklikler kaydedilmedi', '', 'info');
+      }
+    });
+  }
+
+  performSaveOperation() {
     this.isSubmitting = true;
     this.authService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -139,8 +164,6 @@ export class EventComponent implements OnInit {
       }
     });
   }
-
-
 
   setStep(step: number) {
     this.currentStep = step;
