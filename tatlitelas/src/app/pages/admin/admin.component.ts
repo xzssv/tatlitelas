@@ -25,6 +25,9 @@ export class AdminComponent implements OnInit {
   userEvents: Event[] = [];
   currentEvent: Partial<Event> = this.initializeNewEvent();
   showBrideGroomNames: boolean = false;
+  currentStep: number = 0;
+  isSubmitting: boolean = false;
+  isEditing: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -49,11 +52,15 @@ export class AdminComponent implements OnInit {
   createNewEvent() {
     this.currentEvent = this.initializeNewEvent();
     this.showBrideGroomNames = false;
+    this.currentStep = 0;
+    this.isEditing = false;
   }
 
   editEvent(event: Event) {
     this.currentEvent = { ...event };
     this.showBrideGroomNames = event.eventType === 'Düğün Etkinlikleri';
+    this.currentStep = 0;
+    this.isEditing = true;
   }
 
   deleteEvent(event: Event) {
@@ -75,7 +82,7 @@ export class AdminComponent implements OnInit {
       brideName: '',
       groomName: '',
       startDateTime: this.formatDateTimeForInput(new Date()),
-      endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)), // 1 hour later
+      endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)),
       eventCode: this.generateNumericEventCode(),
       description: '',
       hideEventName: false,
@@ -88,7 +95,9 @@ export class AdminComponent implements OnInit {
   }
 
   generateEventCode() {
-    this.currentEvent.eventCode = this.generateNumericEventCode();
+    if (!this.isEditing) {
+      this.currentEvent.eventCode = this.generateNumericEventCode();
+    }
   }
 
   generateNumericEventCode(): string {
@@ -96,6 +105,9 @@ export class AdminComponent implements OnInit {
   }
 
   saveEventSettings() {
+    if (this.isSubmitting) return;
+
+    this.isSubmitting = true;
     this.authService.getCurrentUser().subscribe(user => {
       if (user) {
         const eventData: Event = {
@@ -103,31 +115,48 @@ export class AdminComponent implements OnInit {
           ownerId: user.id
         };
 
-        if (eventData.id) {
-          // Update existing event
-          this.firestoreService.updateEvent(eventData).then(() => {
-            this.loadUserEvents();
-            this.currentEvent = this.initializeNewEvent();
-            alert('Etkinlik başarıyla güncellendi!');
-          });
-        } else {
-          // Create new event
-          this.firestoreService.createEvent(eventData).then(() => {
-            this.loadUserEvents();
-            this.currentEvent = this.initializeNewEvent();
-            alert('Yeni etkinlik başarıyla oluşturuldu!');
-          });
-        }
+        const saveOperation = this.isEditing
+          ? this.firestoreService.updateEvent(eventData)
+          : this.firestoreService.createEvent(eventData);
+
+        saveOperation.then(() => {
+          this.loadUserEvents();
+          this.isSubmitting = false;
+          alert(this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!');
+          if (!this.isEditing) {
+            this.createNewEvent(); // Reset form after creating new event
+          }
+        }).catch(error => {
+          console.error('Etkinlik kaydedilirken hata oluştu:', error);
+          alert('Etkinlik kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.');
+          this.isSubmitting = false;
+        });
       }
     });
   }
 
-  cancel() {
-    this.currentEvent = this.initializeNewEvent();
-    this.showBrideGroomNames = false;
+  setStep(step: number) {
+    this.currentStep = step;
+  }
+
+  getQRCodeUrl(): string {
+    const eventCode = this.currentEvent.eventCode || '';
+    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${eventCode}`;
+  }
+
+  nextStep() {
+    if (this.currentStep < 3) {
+      this.currentStep++;
+    }
+  }
+
+  prevStep() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+    }
   }
 
   private formatDateTimeForInput(date: Date): string {
-    return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:mm
+    return date.toISOString().slice(0, 16);
   }
 }
