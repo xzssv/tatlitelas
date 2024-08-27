@@ -7,12 +7,12 @@ import { FirestoreService } from '../../services/firestore.service';
 import { Event } from '../../models/event.model';
 
 @Component({
-  selector: 'app-admin',
+  selector: 'app-event',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin.component.html'
+  templateUrl: './event.component.html'
 })
-export class AdminComponent implements OnInit {
+export class EventComponent implements OnInit {
   eventTypes = [
     'Düğün Etkinlikleri',
     'Doğum Günü',
@@ -28,6 +28,8 @@ export class AdminComponent implements OnInit {
   currentStep: number = 0;
   isSubmitting: boolean = false;
   isEditing: boolean = false;
+  showSuccessMessage: boolean = false;
+  successMessage: string = '';
 
   constructor(
     private authService: AuthService,
@@ -122,9 +124,10 @@ export class AdminComponent implements OnInit {
         saveOperation.then(() => {
           this.loadUserEvents();
           this.isSubmitting = false;
-          alert(this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!');
+          this.successMessage = this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!';
+          this.showSuccessMessage = true;
           if (!this.isEditing) {
-            this.createNewEvent(); // Reset form after creating new event
+            this.createNewEvent(); // Yeni etkinlik oluşturduktan sonra formu sıfırla
           }
         }).catch(error => {
           console.error('Etkinlik kaydedilirken hata oluştu:', error);
@@ -133,6 +136,10 @@ export class AdminComponent implements OnInit {
         });
       }
     });
+  }
+
+  hideSuccessMessage() {
+    this.showSuccessMessage = false;
   }
 
   setStep(step: number) {
