@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from '../../services/firestore.service';
 import { Event } from '../../models/event.model';
 import Swal from 'sweetalert2';
+import Choices from 'choices.js';
 
 @Component({
   selector: 'app-event',
@@ -13,7 +14,7 @@ import Swal from 'sweetalert2';
   imports: [CommonModule, FormsModule],
   templateUrl: './event.component.html'
 })
-export class EventComponent implements OnInit {
+export class EventComponent implements OnInit, AfterViewInit {
   eventTypes = [
     'Düğün Etkinlikleri',
     'Doğum Günü',
@@ -89,6 +90,47 @@ export class EventComponent implements OnInit {
       hideEventName: false,
       qrOnly: false
     };
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const element = document.getElementById('choices-eventType');
+      if (element) {
+        new Choices(element as HTMLSelectElement, {
+          searchEnabled: false,
+          itemSelectText: '',
+          shouldSort: false,
+          classNames: {
+            containerOuter: 'choices',
+            containerInner: 'choices__inner',
+            input: 'choices__input',
+            inputCloned: 'choices__input--cloned',
+            list: 'choices__list',
+            listItems: 'choices__list--multiple',
+            listSingle: 'choices__list--single',
+            listDropdown: 'choices__list--dropdown',
+            item: 'choices__item',
+            itemSelectable: 'choices__item--selectable',
+            itemDisabled: 'choices__item--disabled',
+            itemChoice: 'choices__item--choice',
+            placeholder: 'choices__placeholder',
+            group: 'choices__group',
+            groupHeading: 'choices__heading',
+            button: 'choices__button',
+            activeState: 'is-active',
+            focusState: 'is-focused',
+            openState: 'is-open',
+            disabledState: 'is-disabled',
+            highlightedState: 'is-highlighted',
+            selectedState: 'is-selected',
+            flippedState: 'is-flipped',
+            loadingState: 'is-loading',
+            noResults: 'has-no-results',
+            noChoices: 'has-no-choices'
+          } as any // Type assertion to avoid TypeScript errors
+        });
+      }
+    }, 0);
   }
 
   onEventTypeChange() {

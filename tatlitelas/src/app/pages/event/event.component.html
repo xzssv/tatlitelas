@@ -52,9 +52,11 @@
                 <div class="min-h-[400px]">
                     <div *ngIf="currentStep === 0">
                         <div class="mb-4">
-                            <label for="eventType" class="block text-sm font-medium text-gray-700">Etkinlik Türü</label>
-                            <select id="eventType" [(ngModel)]="currentEvent.eventType" (change)="onEventTypeChange()"
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <label for="choices-eventType" class="block mb-2 text-sm font-medium text-gray-900">Etkinlik
+                                Türü</label>
+                            <select id="choices-eventType" [(ngModel)]="currentEvent.eventType"
+                                (change)="onEventTypeChange()" name="choices-eventType" class="choices-select">
+                                <option value="">Seçiniz</option>
                                 <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
                             </select>
                         </div>

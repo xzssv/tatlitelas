@@ -4,8 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
     --color-primary: #6B705C;
@@ -37,17 +35,16 @@
   /* Login Component Styles */
   .login-container {
     @apply min-h-screen bg-gradient-to-br from-[#FFF8E7] via-[#FBE7E9] to-[#FFE5D9] bg-[length:400%_400%] animate-gradient bg-fixed;
-  }
+  } 
+}
 
   /* Home Component Styles */
   .home-title {
-    @apply text-5xl text-primary mb-2.5;
-    font-family: 'Dancing Script', cursive;
+    @apply text-5xl text-primary mb-2.5 font-dancing;
   }
 
   .home-date {
-    @apply text-4xl text-secondary mb-7.5;
-    font-family: 'Great Vibes', cursive;
+    @apply text-4xl text-secondary mb-7.5 font-great-vibes;
   }
 
   .btnc {
@@ -184,23 +181,57 @@
     @apply scale-105;
   }
 
+  /* SweetAlert2 Styles */
   .swal2-popup {
-    font-size: 0.875rem;
+    @apply text-sm;
   }
   
   .swal2-title {
-    font-size: 1.25rem;
+    @apply text-xl;
   }
   
   .swal2-content {
-    font-size: 1rem;
+    @apply text-base;
   }
   
   .swal2-styled.swal2-confirm {
-    font-size: 0.875rem;
+    @apply text-sm;
   }
 
-}
+  /* Choices.js Styles */
+  .choices__inner {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .choices__list--single {
+    padding: 4px 16px 4px 4px;
+  }
+  
+  .choices__list--dropdown {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    margin-top: 2px;
+  }
+  
+  .choices__list--dropdown .choices__item--selectable {
+    padding: 8px 16px;
+  }
+  
+  .choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: #e5e7eb;
+  }
+  
+  .choices[data-type*='select-one']:after {
+    border-color: #6b7280 transparent transparent transparent;
+    right: 11.5px;
+    top: 50%;
+    margin-top: -2.5px;
+  }
 
 @keyframes gradient-rotation {
   0% { background-position: 0% 50%; }
