@@ -56,29 +56,33 @@
                     <div *ngIf="currentStep === 0">
                         <div class="mb-4">
                             <label for="eventType" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik Türü
-                                Seçiniz</label>
+                                Seçiniz *</label>
                             <select id="eventType" [(ngModel)]="currentEvent.eventType" (change)="onEventTypeChange()"
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                required>
                                 <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label for="eventName" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik
-                                Adı</label>
+                            <label for="eventName" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik Adı
+                                *</label>
                             <input type="text" id="eventName" [(ngModel)]="currentEvent.name"
-                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
                         </div>
                         <div *ngIf="showBrideGroomNames" class="mb-4">
-                            <label for="brideName" class="block text-sm font-medium text-gray-700 mb-1">Gelin
-                                Adı</label>
+                            <label for="brideName" class="block text-sm font-medium text-gray-700 mb-1">Gelin Adı
+                                *</label>
                             <input type="text" id="brideName" [(ngModel)]="currentEvent.brideName"
-                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
                         </div>
                         <div *ngIf="showBrideGroomNames" class="mb-4">
-                            <label for="groomName" class="block text-sm font-medium text-gray-700 mb-1">Damat
-                                Adı</label>
+                            <label for="groomName" class="block text-sm font-medium text-gray-700 mb-1">Damat Adı
+                                *</label>
                             <input type="text" id="groomName" [(ngModel)]="currentEvent.groomName"
-                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
                         </div>
                     </div>
 
@@ -86,15 +90,17 @@
                     <div *ngIf="currentStep === 1">
                         <div class="mb-4">
                             <label for="startDateTime" class="block text-sm font-medium text-gray-700 mb-1">Başlangıç
-                                Tarihi ve Saati</label>
+                                Tarihi ve Saati *</label>
                             <input type="datetime-local" id="startDateTime" [(ngModel)]="currentEvent.startDateTime"
-                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
                         </div>
                         <div class="mb-4">
                             <label for="endDateTime" class="block text-sm font-medium text-gray-700 mb-1">Bitiş Tarihi
-                                ve Saati</label>
+                                ve Saati *</label>
                             <input type="datetime-local" id="endDateTime" [(ngModel)]="currentEvent.endDateTime"
-                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
                         </div>
                         <div class="mb-4">
                             <label for="description"
@@ -123,18 +129,6 @@
 
                     <!-- Step 4: Access -->
                     <div *ngIf="currentStep === 3">
-                        <div class="mb-4 bg-gray-100 p-4 rounded-md flex items-center justify-between">
-                            <span class="text-sm font-medium text-gray-700">Etkinlik Kodu:</span>
-                            <div class="flex items-center">
-                                <span class="text-lg font-bold text-blue-600 mr-4">{{ currentEvent.eventCode }}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" (click)="generateEventCode()">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                                    </path>
-                                </svg>
-                            </div>
-                        </div>
                         <div
                             class="flex items-center justify-center bg-white p-4 rounded-lg shadow-md w-48 h-48 mx-auto mb-4">
                             <img [src]="getQRCodeUrl()" alt="QR Code" class="w-full h-full object-contain">
@@ -151,8 +145,9 @@
                         Geri
                     </button>
                     <div class="flex-grow"></div>
-                    <button *ngIf="currentStep < 3" (click)="nextStep()"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r">
+                    <button *ngIf="currentStep < 3" (click)="nextStep()" [disabled]="!canProceed()"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r"
+                        [ngClass]="{'opacity-50 cursor-not-allowed': !canProceed()}">
                         İleri
                     </button>
                     <button *ngIf="currentStep === 3" (click)="saveEventSettings()" [disabled]="isSubmitting"

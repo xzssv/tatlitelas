@@ -85,7 +85,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
       groomName: '',
       startDateTime: this.formatDateTimeForInput(new Date()),
       endDateTime: this.formatDateTimeForInput(new Date(Date.now() + 3600000)),
-      eventCode: this.generateNumericEventCode(),
+      eventCode: this.generateUniqueEventCode(),
       description: '',
       hideEventName: false,
       qrOnly: false
@@ -100,34 +100,6 @@ export class ManageComponent implements OnInit, AfterViewInit {
           searchEnabled: false,
           itemSelectText: '',
           shouldSort: false,
-          classNames: {
-            containerOuter: 'choices',
-            containerInner: 'choices__inner',
-            input: 'choices__input',
-            inputCloned: 'choices__input--cloned',
-            list: 'choices__list',
-            listItems: 'choices__list--multiple',
-            listSingle: 'choices__list--single',
-            listDropdown: 'choices__list--dropdown',
-            item: 'choices__item',
-            itemSelectable: 'choices__item--selectable',
-            itemDisabled: 'choices__item--disabled',
-            itemChoice: 'choices__item--choice',
-            placeholder: 'choices__placeholder',
-            group: 'choices__group',
-            groupHeading: 'choices__heading',
-            button: 'choices__button',
-            activeState: 'is-active',
-            focusState: 'is-focused',
-            openState: 'is-open',
-            disabledState: 'is-disabled',
-            highlightedState: 'is-highlighted',
-            selectedState: 'is-selected',
-            flippedState: 'is-flipped',
-            loadingState: 'is-loading',
-            noResults: 'has-no-results',
-            noChoices: 'has-no-choices'
-          } as any // Type assertion to avoid TypeScript errors
         });
       }
     }, 0);
@@ -137,14 +109,8 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.showBrideGroomNames = this.currentEvent.eventType === 'Düğün Etkinlikleri';
   }
 
-  generateEventCode() {
-    if (!this.isEditing) {
-      this.currentEvent.eventCode = this.generateNumericEventCode();
-    }
-  }
-
-  generateNumericEventCode(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+  generateUniqueEventCode(): string {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
   saveEventSettings() {
@@ -208,16 +174,20 @@ export class ManageComponent implements OnInit, AfterViewInit {
   }
 
   setStep(step: number) {
-    this.currentStep = step;
+    if (this.canProceed() || step < this.currentStep) {
+      this.currentStep = step;
+    }
   }
 
   getQRCodeUrl(): string {
     const eventCode = this.currentEvent.eventCode || '';
-    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${eventCode}`;
+    const currentUrl = window.location.origin;
+    const qrData = `${currentUrl}/event/${eventCode}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
   }
 
   nextStep() {
-    if (this.currentStep < 3) {
+    if (this.canProceed()) {
       this.currentStep++;
     }
   }
@@ -228,15 +198,24 @@ export class ManageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  canProceed(): boolean {
+    switch (this.currentStep) {
+      case 0:
+        return !!this.currentEvent.eventType && !!this.currentEvent.name &&
+          (!this.showBrideGroomNames || (!!this.currentEvent.brideName && !!this.currentEvent.groomName));
+      case 1:
+        return !!this.currentEvent.startDateTime && !!this.currentEvent.endDateTime;
+      default:
+        return true;
+    }
+  }
+
   showSuccessMessage() {
     Swal.fire({
       icon: 'success',
       title: 'Başarılı!',
       text: this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!',
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'inline-block px-6 py-3 mb-0 font-bold text-center text-white uppercase align-middle transition-all border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-soft-xs bg-gradient-to-tl from-purple-700 to-pink-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25'
-      }
+      confirmButtonText: 'Tamam'
     });
   }
 
