@@ -87,6 +87,6 @@ export class HomeComponent implements OnInit {
   }
 
   goToSettings() {
-    this.router.navigate(['/event']);
+    this.router.navigate(['/manage']);
   }
 }

@@ -12,9 +12,9 @@ import Choices from 'choices.js';
   selector: 'app-event',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './event.component.html'
+  templateUrl: './manage.component.html'
 })
-export class EventComponent implements OnInit, AfterViewInit {
+export class ManageComponent implements OnInit, AfterViewInit {
   eventTypes = [
     'Düğün Etkinlikleri',
     'Doğum Günü',
