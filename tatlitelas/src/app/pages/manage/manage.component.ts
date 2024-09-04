@@ -30,6 +30,8 @@ export class ManageComponent implements OnInit, AfterViewInit {
   currentStep: number = 0;
   isSubmitting: boolean = false;
   isEditing: boolean = false;
+  showValidationErrors: boolean = false;
+  showEventList: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -56,6 +58,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.showBrideGroomNames = false;
     this.currentStep = 0;
     this.isEditing = false;
+    this.showValidationErrors = false;
   }
 
   editEvent(event: Event) {
@@ -63,6 +66,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.showBrideGroomNames = event.eventType === 'Düğün Etkinlikleri';
     this.currentStep = 0;
     this.isEditing = true;
+    this.showValidationErrors = false;
   }
 
   deleteEvent(event: Event) {
@@ -176,6 +180,9 @@ export class ManageComponent implements OnInit, AfterViewInit {
   setStep(step: number) {
     if (this.canProceed() || step < this.currentStep) {
       this.currentStep = step;
+      this.showValidationErrors = false;
+    } else {
+      this.showValidationErrors = true;
     }
   }
 
@@ -189,12 +196,16 @@ export class ManageComponent implements OnInit, AfterViewInit {
   nextStep() {
     if (this.canProceed()) {
       this.currentStep++;
+      this.showValidationErrors = false;
+    } else {
+      this.showValidationErrors = true;
     }
   }
 
   prevStep() {
     if (this.currentStep > 0) {
       this.currentStep--;
+      this.showValidationErrors = false;
     }
   }
 
@@ -217,6 +228,10 @@ export class ManageComponent implements OnInit, AfterViewInit {
       text: this.isEditing ? 'Etkinlik başarıyla güncellendi!' : 'Yeni etkinlik başarıyla oluşturuldu!',
       confirmButtonText: 'Tamam'
     });
+  }
+
+  toggleEventList() {
+    this.showEventList = !this.showEventList;
   }
 
   private formatDateTimeForInput(date: Date): string {
