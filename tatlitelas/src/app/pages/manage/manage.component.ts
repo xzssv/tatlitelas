@@ -61,6 +61,13 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.showValidationErrors = false;
   }
 
+  focusNextElement(event: Event) {
+    const form = event.target.form;
+    const index = Array.prototype.indexOf.call(form, event.target);
+    form.elements[index + 1].focus();
+    event.preventDefault();
+  }
+
   editEvent(event: Event) {
     this.currentEvent = { ...event };
     this.showBrideGroomNames = event.eventType === 'Düğün Etkinlikleri';
