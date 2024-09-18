@@ -32,6 +32,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
   isEditing: boolean = false;
   showValidationErrors: boolean = false;
   showEventList: boolean = false;
+  private _qrCodeUrl: string = '';
 
   constructor(
     private authService: AuthService,
@@ -59,13 +60,19 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.currentStep = 0;
     this.isEditing = false;
     this.showValidationErrors = false;
+    this._qrCodeUrl = '';
   }
 
-  focusNextElement(event: Event) {
-    const form = event.target.form;
-    const index = Array.prototype.indexOf.call(form, event.target);
-    form.elements[index + 1].focus();
-    event.preventDefault();
+  focusNextElement(event: FocusEvent) {
+    const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+    const form = target.form;
+    if (form) {
+      const index = Array.from(form.elements).indexOf(target);
+      if (index > -1 && index < form.elements.length - 1) {
+        (form.elements[index + 1] as HTMLElement).focus();
+        event.preventDefault();
+      }
+    }
   }
 
   editEvent(event: Event) {
@@ -74,6 +81,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
     this.currentStep = 0;
     this.isEditing = true;
     this.showValidationErrors = false;
+    this._qrCodeUrl = '';
   }
 
   deleteEvent(event: Event) {
@@ -171,6 +179,7 @@ export class ManageComponent implements OnInit, AfterViewInit {
           if (!this.isEditing) {
             this.createNewEvent();
           }
+          this._qrCodeUrl = '';
         }).catch(error => {
           console.error('Etkinlik kaydedilirken hata oluştu:', error);
           Swal.fire({
@@ -194,10 +203,13 @@ export class ManageComponent implements OnInit, AfterViewInit {
   }
 
   getQRCodeUrl(): string {
-    const eventCode = this.currentEvent.eventCode || '';
-    const currentUrl = window.location.origin;
-    const qrData = `${currentUrl}/event/${eventCode}`;
-    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+    if (!this._qrCodeUrl) {
+      const eventCode = this.currentEvent.eventCode || '';
+      const currentUrl = window.location.origin;
+      const qrData = `${currentUrl}/event/${eventCode}`;
+      this._qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+    }
+    return this._qrCodeUrl;
   }
 
   nextStep() {
